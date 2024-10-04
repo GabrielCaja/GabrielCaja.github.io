@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proyectos - Portfolio de Gabriel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2c3e50',
+                        secondary: '#34495e',
+                        accent: '#e74c3c',
+                        light: '#ecf0f1',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-primary text-light min-h-screen">
+    <header class="bg-secondary py-6">
+        <div class="container mx-auto px-4">
+            <h1 class="text-4xl font-bold mb-2">Gabriel Caja</h1>
+            <p class="text-xl">Desarrollador Web </p>
+        </div>
+    </header>
+
+    <nav class="bg-accent py-4">
+        <div class="container mx-auto px-4">
+            <ul class="flex justify-center space-x-6">
+                <li><a href="proyectos.html" class="text-light hover:underline">Inicio</a></li>
+                <li><a href="contacto.html" class="text-light hover:underline">Contacto</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 py-8">
+        <h2 class="text-3xl font-bold mb-8">Mis Proyectos</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="bg-secondary p-6 rounded-lg">
+                <h3 class="text-2xl font-semibold mb-2">Gestor de Tareas</h3>
+                <p class="mb-4">Una aplicación web para gestionar tareas y proyectos, desarrollada con React y Node.js.</p>
+                <a href="#" class="text-accent hover:underline">Ver proyecto</a>
+            </div>
+            <div class="bg-secondary p-6 rounded-lg">
+                <h3 class="text-2xl font-semibold mb-2">E-commerce de Hormigas</h3>
+                <p class="mb-4">Plataforma de comercio utilizando PrestaShop</p>
+                <a href="#" class="text-accent hover:underline">Ver proyecto</a>
+            </div>
+        </div>
+    </main>
+    </footer>
+</body>
+</html>

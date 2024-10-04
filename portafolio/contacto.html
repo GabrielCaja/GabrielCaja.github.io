@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contacto - Portfolio de Gabriel Caja</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2c3e50',
+                        secondary: '#34495e',
+                        accent: '#e74c3c',
+                        light: '#ecf0f1',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-primary text-light min-h-screen">
+    <header class="bg-secondary py-6">
+        <div class="container mx-auto px-4">
+            <h1 class="text-4xl font-bold mb-2">Gabriel Caja</h1>
+            <p class="text-xl">Desarrollador Web</p>
+        </div>
+    </header>
+    <nav class="bg-accent py-4">
+        <div class="container mx-auto px-4">
+            <ul class="flex justify-center space-x-6">
+                <li><a href="index.html" class="text-light hover:underline">Inicio</a></li>
+                <li><a href="proyectos.html" class="text-light hover:underline">Proyectos</a></li>
+                <li><a href="contacto.html" class="text-light hover:underline">Contacto</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 py-8">
+        <h2 class="text-3xl font-bold mb-8">Contacto</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="bg-secondary p-6 rounded-lg">
+            <div>
+                <h3 class="text-2xl font-semibold mb-4">Información de Contacto</h3>
+                <ul class="space-y-2">
+                    <li>
+                        <strong>Email:</strong>
+                        <a href="mailto:gabrielcajaegido@email.com" class="text-accent hover:underline">gabrielcajaegido@gmail.com</a>
+                    </li>
+                    <li>
+                        <strong>LinkedIn:</strong>
+                        <a href="https://www.linkedin.com/in/gabrielcajaegido" target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">linkedin.com/in/gabrielcajaegido</a>
+                    </li>
+                    <li>
+                        <strong>GitHub:</strong>
+                        <a href="https://github.com/gabrielCaja" target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">github.com/gabrielCaja</a>
+                    </li>
+                </ul>
+            </div>
+            </div>
+            
+        </div>
+    </main>
+</body>
+</html>
