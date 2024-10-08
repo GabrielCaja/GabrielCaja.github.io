@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Currículum - Desarrollador</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background-color: #1E1E1E; /* Fondo oscuro */
+            color: #C5C5C5; /* Color de texto claro */
+            line-height: 1.6; /* Mayor separación entre líneas */
+        }
+
+        /* Navbar */
+        .navbar {
+            background-color: #272727; /* Fondo de navbar */
+            transition: background-color 0.3s;
+        }
+
+        .navbar.scrolled {
+            background-color: #1E1E1E; /* Cambio de fondo al desplazarse */
+        }
+
+        /* Enlaces */
+        a {
+            color: #4EC9B0; /* Color de enlaces */
+            transition: color 0.3s;
+        }
+
+        a:hover {
+            color: #9CDCFE; /* Color al pasar el ratón */
+        }
+
+        /* Animaciones */
+        .fade-in {
+            animation: fadeIn 0.8s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Estilo de sección */
+        .section {
+            background-color: #2D2D2D; /* Fondo de sección */
+            border-radius: 8px;
+            padding: 30px;
+            margin: 20px 0; /* Separación entre secciones */
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            display: none; /* Ocultar por defecto */
+        }
+
+        /* Estilo de foto */
+        .profile-pic {
+            border-radius: 50%;
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border: 4px solid #4EC9B0; /* Borde azul */
+            margin: 0 auto; /* Centrar la imagen */
+            display: block; /* Asegurarse de que se centre correctamente */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Sombra de la imagen */
+        }
+
+        /* Mapa */
+        .map-container {
+    width: 100%;
+    height: 450px; /* Ajusta la altura según sea necesario */
+    overflow: hidden;
+    border-radius: 8px; /* Bordes redondeados opcional */
+}
+
+        /* Contacto */
+        .contact-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 8px;
+            filter: brightness(0) invert(1); /* Blanco */
+        }
+
+        /* Terminal de código */
+        .terminal {
+            background-color: #1E1E1E;
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'JetBrains Mono', monospace;
+            overflow: auto;
+            max-height: 200px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            color: #00FF00; /* Color verde típico de terminal */
+        }
+
+        /* Estilo del botón de contacto */
+        .contact-button {
+            background-color: #4EC9B0;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 30px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .contact-button:hover {
+            background-color: #3B8B84; /* Color de botón al pasar el ratón */
+        }
+
+        /* Estilo de educación */
+        .education-item {
+            position: relative;
+            background-color: #3A3D3F;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 10px 0;
+            transition: transform 0.3s;
+        }
+
+        .education-item:hover {
+            transform: scale(1.02); /* Efecto de aumento al pasar el ratón */
+        }
+
+        .education-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -20px;
+            height: 100%;
+            width: 4px;
+            background-color: #4EC9B0; /* Línea de conexión */
+        }
+
+        /* Estilo de experiencia */
+        .experience-item {
+            position: relative;
+            background-color: #3A3D3F;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 10px 0;
+            transition: transform 0.3s;
+        }
+
+        .experience-item:hover {
+            transform: scale(1.02); /* Efecto de aumento al pasar el ratón */
+        }
+
+        .experience-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -20px;
+            height: 100%;
+            width: 4px;
+            background-color: #4EC9B0; /* Línea de conexión */
+        }
+
+        /* Estilo de habilidades */
+        .skill-set {
+            background-color: #3A3D3F;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 10px 0;
+            transition: transform 0.3s;
+        }
+
+        .skill-set:hover {
+            transform: scale(1.02); /* Efecto de aumento al pasar el ratón */
+        }
+
+        .skill {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 10px 0;
+        }
+
+        .skill-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+        }
+
+        .skill-bar {
+            background-color: #4EC9B0;
+            border-radius: 5px;
+            height: 20px;
+            width: 0; /* Inicialmente oculto */
+            transition: width 1s;
+        }
+
+        .skill-container {
+            background-color: #272727;
+            border-radius: 5px;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .skill-description {
+            font-size: 0.875rem;
+            color: #A0A0A0;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar fixed top-0 w-full z-10 p-4">
+        <ul class="flex justify-around">
+            <nav>
+                <ul>
+                    <a href="#about" class="scroll">Sobre Mí</a>
+                    <a href="#skills" class="scroll">Mis habilidades</a>
+                    <a href="#experience" class="scroll">Experiencia</a>
+                    <a href="#education" class="scroll">Educación</a>
+                    <a href="#map" class="scroll">Ubicación</a>
+                    <!-- Agrega más enlaces según sea necesario -->
+                </ul>
+            </nav>
+        </ul>
+    </nav>
+
+    <header class="text-center py-20 mt-16">
+        <img src="tu_foto.jpg" alt="Tu Nombre" class="profile-pic fade-in">
+        <h1 class="text-6xl font-bold fade-in">Tu Nombre</h1>
+        <div class="mt-2 fade-in">
+            <a href="https://github.com/tu_usuario" target="_blank" rel="noopener noreferrer">
+                <img src="github_icon.png" alt="GitHub" class="contact-icon inline">
+            </a>
+            <a href="https://linkedin.com/in/tu_usuario" target="_blank" rel="noopener noreferrer">
+                <img src="linkedin_icon.png" alt="LinkedIn" class="contact-icon inline">
+            </a>
+            <a href="mailto:tu_correo@example.com">
+                <img src="email_icon.png" alt="Email" class="contact-icon inline">
+            </a>
+        </div>
+        <p class="text-3xl mt-2 fade-in">Desarrollador Full-Stack | Apasionado por la Tecnología</p>
+        <div class="mt-4">
+            <a href="#contact" class="contact-button fade-in">Contactar</a>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4">
+        <section id="terminal" class="py-20 fade-in section">
+            <h2 class="text-5xl font-bold mb-4">Terminal</h2>
+            <div class="terminal fade-in">
+                <pre id="code-output">Cargando...</pre>
+            </div>
+        </section>
+
+        <section id="about" class="py-20 fade-in section">
+            <h2 class="text-5xl font-bold mb-4">Sobre mí</h2>
+            <p>Soy un desarrollador apasionado por la programación y el aprendizaje continuo. Me encanta crear soluciones efectivas y elegantes mediante el uso de la tecnología.</p>
+        </section>
+
+        <section id="skills" class="py-20 fade-in section">
+            <h2 class="text-5xl font-bold mb-4">Habilidades</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="skill-set bg-[#3A3D3F] p-6 rounded-lg shadow-md transform transition-transform hover:scale-105">
+                    <h3 class="text-xl font-bold mb-2">HTML</h3>
+                    <p class="text-gray-300">Desarrollo de páginas web estructuradas y semánticas.</p>
+                </div>
+                <div class="skill-set bg-[#3A3D3F] p-6 rounded-lg shadow-md transform transition-transform hover:scale-105">
+                    <h3 class="text-xl font-bold mb-2">CSS</h3>
+                    <p class="text-gray-300">Diseño de interfaces atractivas y responsivas.</p>
+                </div>
+                <div class="skill-set bg-[#3A3D3F] p-6 rounded-lg shadow-md transform transition-transform hover:scale-105">
+                    <h3 class="text-xl font-bold mb-2">JavaScript</h3>
+                    <p class="text-gray-300">Interactividad y dinámicas en páginas web.</p>
+                </div>
+                <div class="skill-set bg-[#3A3D3F] p-6 rounded-lg shadow-md transform transition-transform hover:scale-105">
+                    <h3 class="text-xl font-bold mb-2">Python</h3>
+                    <p class="text-gray-300">Desarrollo de aplicaciones y scripts eficientes.</p>
+                </div>
+                <div class="skill-set bg-[#3A3D3F] p-6 rounded-lg shadow-md transform transition-transform hover:scale-105">
+                    <h3 class="text-xl font-bold mb-2">Java</h3>
+                    <p class="text-gray-300">Construcción de aplicaciones robustas y escalables.</p>
+                </div>
+                <!-- Agrega más habilidades aquí -->
+            </div>
+        </section>
+        
+
+        <section id="education" class="py-20 fade-in section">
+            <h2 class="text-5xl font-bold mb-4">Educación</h2>
+            <div class="education-item fade-in">
+                <h3 class="text-2xl font-bold">Título Universitario</h3>
+                <p>Universidad XYZ</p>
+                <p>Año de Graduación: 2023</p>
+            </div>
+            <div class="education-item fade-in">
+                <h3 class="text-2xl font-bold">Curso de Desarrollo Web</h3>
+                <p>Instituto ABC</p>
+                <p>Año de Finalización: 2022</p>
+            </div>
+        </section>
+
+        <section id="experience" class="py-20 fade-in section">
+            <h2 class="text-5xl font-bold mb-4">Experiencia</h2>
+            <div class="experience-item fade-in">
+                <h3 class="text-2xl font-bold">Desarrollador Full-Stack en Empresa XYZ</h3>
+                <p>Fecha: Enero 2023 - Presente</p>
+                <ul>
+                    <li>Desarrollé aplicaciones web utilizando HTML, CSS y JavaScript.</li>
+                    <li>Colaboré en proyectos ágiles en equipo.</li>
+                    <li>Implementé soluciones innovadoras para mejorar la experiencia del usuario.</li>
+                </ul>
+            </div>
+            <div class="experience-item fade-in">
+                <h3 class="text-2xl font-bold">Practicante en Empresa ABC</h3>
+                <p>Fecha: Julio 2022 - Diciembre 2022</p>
+                <ul>
+                    <li>Asistí en el desarrollo de un sistema de gestión interna.</li>
+                    <li>Realicé pruebas y aseguré la calidad del software.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="map" class="py-20 fade-in section">
+            <h2 class="text-5xl font-bold mb-4">Ubicación</h2>
+            <div class="map-container">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d" 
+                        width="100%" 
+                        height="450" 
+                        style="border:0;" 
+                        allowfullscreen="" 
+                        loading="lazy">
+                </iframe>
+            </div>
+        </section>
+        
+    </main>
+
+    <script>
+        // Cambiar la clase del navbar al desplazarse
+        window.onscroll = function () {
+            var navbar = document.querySelector('.navbar');
+            if (document.body.scrollTop > 50 || document.documentElement.scrollTop > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        };
+
+        // Mostrar secciones mientras se carga el terminal
+        const sections = document.querySelectorAll('.section');
+        const terminalOutput = document.getElementById('code-output');
+
+        let currentSection = 0;
+
+        function showNextSection() {
+            if (currentSection < sections.length) {
+                sections[currentSection].style.display = 'block';
+                sections[currentSection].classList.add('fade-in');
+                terminalOutput.innerHTML += `<br />Cargando sección: ${sections[currentSection].id}`;
+                currentSection++;
+                setTimeout(showNextSection, 1000); // Tiempo de espera para la siguiente sección
+            } else {
+                terminalOutput.innerHTML += `<br />Carga completa!`;
+            }
+        }
+
+        showNextSection(); // Iniciar la carga de secciones
+        document.querySelectorAll('.scroll').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+
+            document.querySelector(this.getAttribute('href')).scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+    });
+    </script>
+</body>
+
+</html>
