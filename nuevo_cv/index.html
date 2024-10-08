@@ -10,29 +10,70 @@
     <style>
         body {
             font-family: 'JetBrains Mono', monospace;
-            background-color: #1E1E1E; /* Fondo oscuro */
-            color: #C5C5C5; /* Color de texto claro */
-            line-height: 1.6; /* Mayor separación entre líneas */
+            background-color: #1E1E1E;
+            color: #C5C5C5;
+            line-height: 1.6;
         }
 
         /* Navbar */
         .navbar {
-            background-color: #272727; /* Fondo de navbar */
+            background-color: #272727;
             transition: background-color 0.3s;
         }
 
         .navbar.scrolled {
-            background-color: #1E1E1E; /* Cambio de fondo al desplazarse */
+            background-color: #1E1E1E;
+        }
+
+        .menu-icon {
+            display: none;
+            font-size: 2rem;
+            cursor: pointer;
+        }
+
+        .navbar-menu {
+            display: none;
+            flex-direction: column;
+        }
+
+        .navbar.active .navbar-menu {
+            display: flex;
+        }
+
+        @media (max-width: 768px) {
+            .menu-icon {
+                display: block;
+            }
+
+            .navbar-menu {
+                display: none;
+                flex-direction: column;
+            }
+
+            .navbar.active .navbar-menu {
+                display: flex;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .menu-icon {
+                display: none;
+            }
+
+            .navbar-menu {
+                display: flex;
+                flex-direction: row;
+            }
         }
 
         /* Enlaces */
         a {
-            color: #4EC9B0; /* Color de enlaces */
+            color: #4EC9B0;
             transition: color 0.3s;
         }
 
         a:hover {
-            color: #9CDCFE; /* Color al pasar el ratón */
+            color: #9CDCFE;
         }
 
         /* Animaciones */
@@ -52,45 +93,45 @@
             }
         }
 
-        /* Estilo de sección */
+        /* Secciones */
         .section {
-            background-color: #2D2D2D; /* Fondo de sección */
+            background-color: #2D2D2D;
             border-radius: 8px;
             padding: 30px;
-            margin: 20px 0; /* Separación entre secciones */
+            margin: 20px 0;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-            display: none; /* Ocultar por defecto */
+            display: none;
         }
 
-        /* Estilo de foto */
+        /* Foto */
         .profile-pic {
             border-radius: 50%;
             width: 150px;
             height: 150px;
             object-fit: cover;
-            border: 4px solid #4EC9B0; /* Borde azul */
-            margin: 0 auto; /* Centrar la imagen */
-            display: block; /* Asegurarse de que se centre correctamente */
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Sombra de la imagen */
+            border: 4px solid #4EC9B0;
+            margin: 0 auto;
+            display: block;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
         }
 
         /* Mapa */
         .map-container {
-    width: 100%;
-    height: 450px; /* Ajusta la altura según sea necesario */
-    overflow: hidden;
-    border-radius: 8px; /* Bordes redondeados opcional */
-}
+            width: 100%;
+            height: 450px;
+            overflow: hidden;
+            border-radius: 8px;
+        }
 
-        /* Contacto */
+        /* Iconos de contacto */
         .contact-icon {
             width: 24px;
             height: 24px;
             margin-right: 8px;
-            filter: brightness(0) invert(1); /* Blanco */
+            filter: brightness(0) invert(1);
         }
 
-        /* Terminal de código */
+        /* Terminal */
         .terminal {
             background-color: #1E1E1E;
             border-radius: 8px;
@@ -99,10 +140,10 @@
             overflow: auto;
             max-height: 200px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-            color: #00FF00; /* Color verde típico de terminal */
+            color: #00FF00;
         }
 
-        /* Estilo del botón de contacto */
+        /* Botón de contacto */
         .contact-button {
             background-color: #4EC9B0;
             color: white;
@@ -113,10 +154,10 @@
         }
 
         .contact-button:hover {
-            background-color: #3B8B84; /* Color de botón al pasar el ratón */
+            background-color: #3B8B84;
         }
 
-        /* Estilo de educación */
+        /* Educación */
         .education-item {
             position: relative;
             background-color: #3A3D3F;
@@ -127,7 +168,7 @@
         }
 
         .education-item:hover {
-            transform: scale(1.02); /* Efecto de aumento al pasar el ratón */
+            transform: scale(1.02);
         }
 
         .education-item::before {
@@ -137,10 +178,10 @@
             left: -20px;
             height: 100%;
             width: 4px;
-            background-color: #4EC9B0; /* Línea de conexión */
+            background-color: #4EC9B0;
         }
 
-        /* Estilo de experiencia */
+        /* Experiencia */
         .experience-item {
             position: relative;
             background-color: #3A3D3F;
@@ -151,7 +192,7 @@
         }
 
         .experience-item:hover {
-            transform: scale(1.02); /* Efecto de aumento al pasar el ratón */
+            transform: scale(1.02);
         }
 
         .experience-item::before {
@@ -161,10 +202,10 @@
             left: -20px;
             height: 100%;
             width: 4px;
-            background-color: #4EC9B0; /* Línea de conexión */
+            background-color: #4EC9B0;
         }
 
-        /* Estilo de habilidades */
+        /* Habilidades */
         .skill-set {
             background-color: #3A3D3F;
             border-radius: 8px;
@@ -174,57 +215,29 @@
         }
 
         .skill-set:hover {
-            transform: scale(1.02); /* Efecto de aumento al pasar el ratón */
-        }
-
-        .skill {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin: 10px 0;
+            transform: scale(1.02);
         }
 
         .skill-title {
             font-size: 1.25rem;
             font-weight: bold;
         }
-
-        .skill-bar {
-            background-color: #4EC9B0;
-            border-radius: 5px;
-            height: 20px;
-            width: 0; /* Inicialmente oculto */
-            transition: width 1s;
-        }
-
-        .skill-container {
-            background-color: #272727;
-            border-radius: 5px;
-            overflow: hidden;
-            width: 100%;
-        }
-
-        .skill-description {
-            font-size: 0.875rem;
-            color: #A0A0A0;
-        }
     </style>
 </head>
 
 <body>
     <nav class="navbar fixed top-0 w-full z-10 p-4">
-        <ul class="flex justify-around">
-            <nav>
-                <ul>
-                    <a href="#about" class="scroll">Sobre Mí</a>
-                    <a href="#skills" class="scroll">Mis habilidades</a>
-                    <a href="#experience" class="scroll">Experiencia</a>
-                    <a href="#education" class="scroll">Educación</a>
-                    <a href="#map" class="scroll">Ubicación</a>
-                    <!-- Agrega más enlaces según sea necesario -->
-                </ul>
-            </nav>
-        </ul>
+        <div class="flex justify-between items-center">
+            <div class="text-xl text-white font-bold">MiCurriculum</div>
+            <div class="menu-icon text-white md:hidden" id="menu-toggle">☰</div>
+            <ul class="navbar-menu flex md:space-x-4">
+                <li><a href="#about" class="scroll">Sobre Mí</a></li>
+                <li><a href="#skills" class="scroll">Mis Habilidades</a></li>
+                <li><a href="#experience" class="scroll">Experiencia</a></li>
+                <li><a href="#education" class="scroll">Educación</a></li>
+                <li><a href="#map" class="scroll">Ubicación</a></li>
+            </ul>
+        </div>
     </nav>
 
     <header class="text-center py-20 mt-16">
@@ -257,97 +270,55 @@
 
         <section id="about" class="py-20 fade-in section">
             <h2 class="text-5xl font-bold mb-4">Sobre mí</h2>
-            <p>Soy un desarrollador apasionado por la programación y el aprendizaje continuo. Me encanta crear soluciones efectivas y elegantes mediante el uso de la tecnología.</p>
+            <p>Soy un desarrollador apasionado por la programación y el aprendizaje continuo.</p>
         </section>
 
         <section id="skills" class="py-20 fade-in section">
             <h2 class="text-5xl font-bold mb-4">Habilidades</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div class="skill-set bg-[#3A3D3F] p-6 rounded-lg shadow-md transform transition-transform hover:scale-105">
-                    <h3 class="text-xl font-bold mb-2">HTML</h3>
-                    <p class="text-gray-300">Desarrollo de páginas web estructuradas y semánticas.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="skill-set">
+                    <h3 class="text-xl font-bold mb-2">HTML & CSS</h3>
+                    <p>Desarrollo de interfaces responsivas y estéticas.</p>
                 </div>
-                <div class="skill-set bg-[#3A3D3F] p-6 rounded-lg shadow-md transform transition-transform hover:scale-105">
-                    <h3 class="text-xl font-bold mb-2">CSS</h3>
-                    <p class="text-gray-300">Diseño de interfaces atractivas y responsivas.</p>
-                </div>
-                <div class="skill-set bg-[#3A3D3F] p-6 rounded-lg shadow-md transform transition-transform hover:scale-105">
+                <div class="skill-set">
                     <h3 class="text-xl font-bold mb-2">JavaScript</h3>
-                    <p class="text-gray-300">Interactividad y dinámicas en páginas web.</p>
+                    <p>Programación de interactividad y lógica en el cliente.</p>
                 </div>
-                <div class="skill-set bg-[#3A3D3F] p-6 rounded-lg shadow-md transform transition-transform hover:scale-105">
-                    <h3 class="text-xl font-bold mb-2">Python</h3>
-                    <p class="text-gray-300">Desarrollo de aplicaciones y scripts eficientes.</p>
-                </div>
-                <div class="skill-set bg-[#3A3D3F] p-6 rounded-lg shadow-md transform transition-transform hover:scale-105">
-                    <h3 class="text-xl font-bold mb-2">Java</h3>
-                    <p class="text-gray-300">Construcción de aplicaciones robustas y escalables.</p>
-                </div>
-                <!-- Agrega más habilidades aquí -->
-            </div>
-        </section>
-        
-
-        <section id="education" class="py-20 fade-in section">
-            <h2 class="text-5xl font-bold mb-4">Educación</h2>
-            <div class="education-item fade-in">
-                <h3 class="text-2xl font-bold">Título Universitario</h3>
-                <p>Universidad XYZ</p>
-                <p>Año de Graduación: 2023</p>
-            </div>
-            <div class="education-item fade-in">
-                <h3 class="text-2xl font-bold">Curso de Desarrollo Web</h3>
-                <p>Instituto ABC</p>
-                <p>Año de Finalización: 2022</p>
             </div>
         </section>
 
         <section id="experience" class="py-20 fade-in section">
             <h2 class="text-5xl font-bold mb-4">Experiencia</h2>
-            <div class="experience-item fade-in">
-                <h3 class="text-2xl font-bold">Desarrollador Full-Stack en Empresa XYZ</h3>
-                <p>Fecha: Enero 2023 - Presente</p>
-                <ul>
-                    <li>Desarrollé aplicaciones web utilizando HTML, CSS y JavaScript.</li>
-                    <li>Colaboré en proyectos ágiles en equipo.</li>
-                    <li>Implementé soluciones innovadoras para mejorar la experiencia del usuario.</li>
-                </ul>
+            <div class="experience-item">
+                <h3 class="text-xl font-bold">Desarrollador Web</h3>
+                <p>Empresa X - 2020 - Presente</p>
+                <p>Descripción de tu experiencia y logros.</p>
             </div>
-            <div class="experience-item fade-in">
-                <h3 class="text-2xl font-bold">Practicante en Empresa ABC</h3>
-                <p>Fecha: Julio 2022 - Diciembre 2022</p>
-                <ul>
-                    <li>Asistí en el desarrollo de un sistema de gestión interna.</li>
-                    <li>Realicé pruebas y aseguré la calidad del software.</li>
-                </ul>
+        </section>
+
+        <section id="education" class="py-20 fade-in section">
+            <h2 class="text-5xl font-bold mb-4">Educación</h2>
+            <div class="education-item">
+                <h3 class="text-xl font-bold">Ingeniería en Informática</h3>
+                <p>Universidad Y - 2015 - 2020</p>
             </div>
         </section>
 
         <section id="map" class="py-20 fade-in section">
             <h2 class="text-5xl font-bold mb-4">Ubicación</h2>
             <div class="map-container">
-                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d" 
-                        width="100%" 
-                        height="450" 
-                        style="border:0;" 
-                        allowfullscreen="" 
-                        loading="lazy">
-                </iframe>
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3171.846313092942!2d-122.08424968467698!3d37.42206587982654!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x808fb1f15f2cc85f%3A0xd56b7b5942729d6!2sGoogleplex!5e0!3m2!1sen!2sus!4v1616100265963!5m2!1sen!2sus"
+                    width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
             </div>
         </section>
-        
     </main>
 
     <script>
-        // Cambiar la clase del navbar al desplazarse
-        window.onscroll = function () {
-            var navbar = document.querySelector('.navbar');
-            if (document.body.scrollTop > 50 || document.documentElement.scrollTop > 50) {
-                navbar.classList.add('scrolled');
-            } else {
-                navbar.classList.remove('scrolled');
-            }
-        };
+        // Mostrar/ocultar menú en pantallas pequeñas
+        document.getElementById('menu-toggle').addEventListener('click', function () {
+            const navbar = document.querySelector('.navbar');
+            navbar.classList.toggle('active');
+        });
 
         // Mostrar secciones mientras se carga el terminal
         const sections = document.querySelectorAll('.section');
@@ -361,22 +332,23 @@
                 sections[currentSection].classList.add('fade-in');
                 terminalOutput.innerHTML += `<br />Cargando sección: ${sections[currentSection].id}`;
                 currentSection++;
-                setTimeout(showNextSection, 1000); // Tiempo de espera para la siguiente sección
+                setTimeout(showNextSection, 1000);
             } else {
                 terminalOutput.innerHTML += `<br />Carga completa!`;
             }
         }
 
-        showNextSection(); // Iniciar la carga de secciones
-        document.querySelectorAll('.scroll').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
-            e.preventDefault();
+        showNextSection();
 
-            document.querySelector(this.getAttribute('href')).scrollIntoView({
-                behavior: 'smooth'
+        // Smooth scroll
+        document.querySelectorAll('.scroll').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
             });
         });
-    });
     </script>
 </body>
 
