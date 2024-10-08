@@ -243,6 +243,7 @@
     <header class="text-center py-20 mt-16">
         <img src="tu_foto.jpg" alt="Tu Nombre" class="profile-pic fade-in">
         <h1 class="text-6xl font-bold fade-in">Tu Nombre</h1>
+        <br>
         <div class="mt-2 fade-in">
             <a href="https://github.com/tu_usuario" target="_blank" rel="noopener noreferrer">
                 <img src="github_icon.png" alt="GitHub" class="contact-icon inline">
@@ -254,10 +255,9 @@
                 <img src="email_icon.png" alt="Email" class="contact-icon inline">
             </a>
         </div>
-        <p class="text-3xl mt-2 fade-in">Desarrollador Full-Stack | Apasionado por la Tecnología</p>
-        <div class="mt-4">
-            <a href="#contact" class="contact-button fade-in">Contactar</a>
-        </div>
+        <br>
+        <p class="text-3xl mt-2 fade-in">Desarrollador Web</p>
+        
     </header>
 
     <main class="max-w-7xl mx-auto px-4">
@@ -330,11 +330,11 @@
             if (currentSection < sections.length) {
                 sections[currentSection].style.display = 'block';
                 sections[currentSection].classList.add('fade-in');
-                terminalOutput.innerHTML += `<br />Cargando sección: ${sections[currentSection].id}`;
+                terminalOutput.innerHTML += `<br />$ Cargando sección: ${sections[currentSection].id}`;
                 currentSection++;
                 setTimeout(showNextSection, 1000);
             } else {
-                terminalOutput.innerHTML += `<br />Carga completa!`;
+                terminalOutput.innerHTML += `<br />$ Carga completa!`;
             }
         }
 
