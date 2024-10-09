@@ -48,6 +48,13 @@
         font-size: 23px; /* Tamaño de la flecha */
         text-align: center;
         }
+        .profile-pic {
+    width: 150px;  /* Cambia el tamaño según sea necesario */
+    height: auto;  /* Mantiene la proporción de la imagen */
+    border-radius: 8%; /* Para un efecto de círculo */
+    display: block; /* Para centrar la imagen si es necesario */
+    margin: 0 auto; /* Centrar la imagen */
+}
     </style>
 </head>
 <a href="#" id="scrollToTop" class="fixed bottom-5 right-5 bg-primary text-white rounded-full p-5 shadow-lg hover:bg-secondary transition-colors">
@@ -71,7 +78,7 @@
     </nav>
 
     <header class="text-center py-20 mt-16">
-        <img src="https://via.placeholder.com/150" alt="Gabriel Caja Egido" class="w-32 h-32 rounded-full border-4 border-primary mx-auto mb-4 fade-in">
+        <img src="src/foto.jpg" class="profile-pic" alt="MIFOTO"> <br>
         <h1 id="typing-name" class="text-4xl md:text-6xl font-bold fade-in typing text-white"></h1>
         <p class="text-xl md:text-3xl mt-5 fade-in text-comment">// Desarrollador Web</p>
 
@@ -203,7 +210,7 @@
             if (currentSection < sections.length) {
                 sections[currentSection].style.opacity = '1';
                 sections[currentSection].style.transform = 'translateY(0)';
-                terminalOutput.innerHTML += `<br />$ Cargando sección: ${sections[currentSection].id}`;
+                terminalOutput.innerHTML += `$ Cargando sección: ${sections[currentSection].id}<br />`;
                 currentSection++;
                 setTimeout(showNextSection, 1000);
             } else {
