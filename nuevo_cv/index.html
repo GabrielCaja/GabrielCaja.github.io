@@ -16,9 +16,13 @@
                         secondary: '#9CDCFE',
                         background: '#1E1E1E',
                         surface: '#2D2D2D',
+                        comment: '#6A9955',
+                        string: '#CE9178',
+                        keyword: '#569CD6',
                     },
                     fontFamily: {
-                        mono: ['JetBrains Mono', 'monospace'],
+                        'fira': ['"Fira Code"', 'monospace'],
+                        'source': ['"Source Code Pro"', 'monospace'],
                     },
                 },
             },
@@ -86,9 +90,18 @@
         </section>
 
         <section id="about" class="py-10 fade-in">
-            <h2 class="text-3xl md:text-5xl font-bold mb-4">Sobre mí</h2>
-            <p class="text-lg">Soy un desarrollador apasionado por la programación y el aprendizaje continuo. Me especializo en crear soluciones web innovadoras y eficientes.</p>
+            <h2 class="text-3xl md:text-5xl font-bold mb-4 font-fira">Sobre mí</h2>
+            <div class="bg-surface rounded-lg p-6">
+                <p class="code-line text-lg" data-line="1"><span class="text-keyword">const</span> <span class="text-primary">sobreMi</span> = {</p>
+                <p class="code-line text-lg pl-8" data-line="2"><span class="text-string">"nombre"</span>: <span class="text-string">"Gabriel Caja Egido"</span>,</p>
+                <p class="code-line text-lg pl-8" data-line="3"><span class="text-string">"profesión"</span>: <span class="text-string">"Desarrollador Web"</span>,</p>
+                <p class="code-line text-lg pl-8" data-line="4"><span class="text-string">"pasión"</span>: <span class="text-string">"Crear soluciones innovadoras"</span></p>
+                <p class="code-line text-lg" data-line="5">};</p>
+                <p class="code-line text-lg mt-4" data-line="6"><span class="text-comment">// Soy un desarrollador apasionado por la programación y el aprendizaje continuo.</span></p>
+                <p class="code-line text-lg" data-line="7"><span class="text-comment">// Me especializo en crear soluciones web eficientes y escalables.</span></p>
+            </div>
         </section>
+
 
         <section id="skills" class="py-10 fade-in">
             <h2 class="text-3xl md:text-5xl font-bold mb-4">Habilidades</h2>
@@ -182,7 +195,7 @@
             if (currentSection < sections.length) {
                 sections[currentSection].style.opacity = '1';
                 sections[currentSection].style.transform = 'translateY(0)';
-                terminalOutput.innerHTML += `<br />$ Cargando sección: ${sections[currentSection].id}`;
+                terminalOutput.innerHTML += `<br />$ Cargando secc  ión: ${sections[currentSection].id}`;
                 currentSection++;
                 setTimeout(showNextSection, 1000);
             } else {
