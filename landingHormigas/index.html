@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>eJPTv2 - Guía de Herramientas (HTML puro)</title>
+  <title>eJPTv2 - Guía de Herramientas</title>
   <style>
 .section {
   background: #111827;
@@ -208,36 +208,7 @@
         <div class="tip">✅ Prueba credenciales default: admin:admin, root:root</div>
         <div class="tip">✅ Reutiliza passwords encontradas en todos los servicios</div>
       </div>
-    </div>
-<!-- 🧠 SECCIÓN: RECONOCIMIENTO PASIVO -->
-<section class="bg-gray-900 text-white p-6 mt-10 rounded-xl shadow-2xl">
-  <h2 class="text-3xl font-bold mb-4 text-yellow-400 flex items-center gap-2">
-    🧠 Reconocimiento Pasivo
-  </h2>
-  <p class="text-gray-300 mb-6">
-    Esta fase se enfoca en recolectar información sin interactuar directamente con los servicios del objetivo. 
-    Aquí tienes comandos y fuentes útiles para analizar el sistema de forma pasiva.
-  </p>
-
-  <!-- Archivos y permisos -->
-  <h3 class="text-2xl font-bold text-blue-400 mb-3">📁 Revisión de archivos y permisos</h3>
-  <div class="overflow-x-auto mb-8">
-    <table class="w-full border-collapse">
-      <thead class="bg-gray-800 text-yellow-400">
-        <tr>
-          <th class="p-2 text-left">Objetivo</th>
-          <th class="p-2 text-left">Comando</th>
-          <th class="p-2 text-left">Explicación</th>
-        </tr>
-      </thead>
-      <tbody class="text-gray-300">
-        <tr><td class="p-2">Ver archivos con bit SUID</td><td class="p-2"><code>find / -perm -4000 2>/dev/null</code></td><td class="p-2">Binarios que pueden usarse para escalar privilegios</td></tr>
-        <tr><td class="p-2">Ver archivos con bit SGID</td><td class="p-2"><code>find / -perm -2000 2>/dev/null</code></td><td class="p-2">Permiten ejecutar con grupo del propietario</td></tr>
-        <tr><td class="p-2">Listar usuarios del sistema</td><td class="p-2"><code>cat /etc/passwd</code></td><td class="p-2">Usuarios válidos del sistema</td></tr>
-        <tr><td class="p-2">Buscar contraseñas en texto plano</td><td class="p-2"><code>grep -ri password /etc/* 2>/dev/null</code></td><td class="p-2">Busca contraseñas en archivos</td></tr>
-      </tbody>
-    </table>
-  </div>
+    </div> 
 !-- 🧠 SECCIÓN: RECONOCIMIENTO PASIVO -->
 <section class="section">
   <h2 class="section-title">🧠 Reconocimiento Pasivo</h2>
@@ -316,81 +287,8 @@
     </div>
   </div>
 </section>
-  <!-- Sistema y red -->
-  <h3 class="text-2xl font-bold text-green-400 mb-3">🌐 Información del sistema y red</h3>
-  <div class="overflow-x-auto mb-8">
-    <table class="w-full border-collapse">
-      <thead class="bg-gray-800 text-yellow-400">
-        <tr>
-          <th class="p-2 text-left">Objetivo</th>
-          <th class="p-2 text-left">Comando</th>
-          <th class="p-2 text-left">Explicación</th>
-        </tr>
-      </thead>
-      <tbody class="text-gray-300">
-        <tr><td class="p-2">Versión del sistema</td><td class="p-2"><code>uname -a</code></td><td class="p-2">Kernel y arquitectura</td></tr>
-        <tr><td class="p-2">Distribución Linux</td><td class="p-2"><code>cat /etc/os-release</code></td><td class="p-2">Nombre y versión de la distro</td></tr>
-        <tr><td class="p-2">Interfaces de red</td><td class="p-2"><code>ip a</code></td><td class="p-2">Muestra IPs configuradas</td></tr>
-        <tr><td class="p-2">DNS configurado</td><td class="p-2"><code>cat /etc/resolv.conf</code></td><td class="p-2">Servidores DNS en uso</td></tr>
-        <tr><td class="p-2">Procesos activos</td><td class="p-2"><code>ps aux</code></td><td class="p-2">Ver qué está corriendo</td></tr>
-        <tr><td class="p-2">Usuarios conectados</td><td class="p-2"><code>who</code> o <code>w</code></td><td class="p-2">Sesiones activas</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <!-- Enumeración pasiva -->
-  <h3 class="text-2xl font-bold text-purple-400 mb-3">🔍 Enumeración pasiva del sistema</h3>
-  <div class="overflow-x-auto mb-8">
-    <table class="w-full border-collapse">
-      <thead class="bg-gray-800 text-yellow-400">
-        <tr>
-          <th class="p-2 text-left">Objetivo</th>
-          <th class="p-2 text-left">Comando / Archivo</th>
-          <th class="p-2 text-left">Explicación</th>
-        </tr>
-      </thead>
-      <tbody class="text-gray-300">
-        <tr><td class="p-2">Variables de entorno</td><td class="p-2"><code>env</code></td><td class="p-2">Puede contener rutas o claves</td></tr>
-        <tr><td class="p-2">Cron jobs</td><td class="p-2"><code>cat /etc/crontab</code></td><td class="p-2">Tareas automáticas configuradas</td></tr>
-        <tr><td class="p-2">Llaves SSH</td><td class="p-2"><code>ls -la ~/.ssh/</code></td><td class="p-2">Buscar llaves privadas</td></tr>
-        <tr><td class="p-2">Historial bash</td><td class="p-2"><code>cat ~/.bash_history</code></td><td class="p-2">Ver comandos usados por el usuario</td></tr>
-        <tr><td class="p-2">Configuración sudo</td><td class="p-2"><code>sudo -l</code></td><td class="p-2">Comandos que puede ejecutar sin contraseña</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <!-- Fuentes externas -->
-  <h3 class="text-2xl font-bold text-pink-400 mb-3">🌍 Fuentes externas (reconocimiento real pasivo)</h3>
-  <div class="overflow-x-auto mb-8">
-    <table class="w-full border-collapse">
-      <thead class="bg-gray-800 text-yellow-400">
-        <tr>
-          <th class="p-2 text-left">Fuente</th>
-          <th class="p-2 text-left">Herramienta / Acción</th>
-          <th class="p-2 text-left">Descripción</th>
-        </tr>
-      </thead>
-      <tbody class="text-gray-300">
-        <tr><td class="p-2">WHOIS</td><td class="p-2"><code>whois dominio.com</code></td><td class="p-2">Información del dominio</td></tr>
-        <tr><td class="p-2">DNS</td><td class="p-2"><code>dig dominio.com any</code></td><td class="p-2">Registros DNS</td></tr>
-        <tr><td class="p-2">Subdominios</td><td class="p-2">crt.sh, dnsdumpster.com</td><td class="p-2">Listar subdominios públicos</td></tr>
-        <tr><td class="p-2">Motores de búsqueda</td><td class="p-2"><code>site:dominio.com intitle:"index of"</code></td><td class="p-2">Encuentra páginas expuestas</td></tr>
-        <tr><td class="p-2">Redes sociales / repositorios</td><td class="p-2">LinkedIn, GitHub, Shodan</td><td class="p-2">Buscar información o código filtrado</td></tr>
-        <tr><td class="p-2">Wayback Machine</td><td class="p-2"><code>web.archive.org</code></td><td class="p-2">Versiones antiguas del sitio</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <!-- Tips -->
-  <div class="bg-gradient-to-r from-green-800 to-blue-800 p-5 rounded-xl text-sm">
-    <h4 class="font-bold text-yellow-400 mb-2">💡 Consejos:</h4>
-    <ul class="list-disc list-inside text-gray-300 space-y-1">
-      <li>No uses herramientas activas como Nmap en esta fase.</li>
-      <li>Todo debe provenir de archivos locales o fuentes públicas.</li>
-      <li>Documenta cada hallazgo en <code>notes.txt</code>.</li>
-      <li>Prioriza usuarios, versiones, rutas y permisos.</li>
-    </ul>
-  </div>
+ 
+  
 </section>
     <footer>
       Archivo HTML autónomo — usa el contenido solo en entornos autorizados.
